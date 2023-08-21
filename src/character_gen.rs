@@ -43,10 +43,10 @@ impl crate::View for CharacterGenComponent {
                   ui.label("Strength");
                   ui.label((attr.str + attr_add.str).to_string());
                   if ui.button("-").clicked() {
-                    adjust_count(attr.str, attr_add.str, points, 1);
+                    adjust_count(&attr.str, &mut attr_add.str, points, 1);
                   };
                   if ui.button("+").clicked() {
-                    adjust_count(attr.str, attr_add.str, points, -1);
+                    adjust_count(&attr.str, &mut attr_add.str, points, -1);
                   };
                 });
                 ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
