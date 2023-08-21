@@ -91,7 +91,7 @@ fn can_subtract(attr_add: &i8, points: &u32) -> bool {
   return (*attr_add - 1) > 0 && *points < 27
 }
 
-fn adjust_count(attr: &i8, attr_add: &mut i8, points: &mut u32, amount: i8) {
+fn adjust_count(attr: &i8, attr_add: &mut i8, points: &mut u32, amount: u32) {
     if (*attr + *attr_add + amount) < 20 && (*attr_add + amount) > 0 {
       *attr_add += amount;
       *points -= amount;
