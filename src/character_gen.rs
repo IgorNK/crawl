@@ -39,7 +39,7 @@ impl crate::View for CharacterGenComponent {
         egui::ScrollArea::vertical()
             .auto_shrink([false; 2])
             .show(ui, |ui| {
-                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
                   ui.label("Strength");
                   ui.label((attr.str + attr_add.str).to_string());
                   if ui.button("-").clicked() {
@@ -48,37 +48,37 @@ impl crate::View for CharacterGenComponent {
                   if ui.button("+").clicked() {
                     adjust_count(&attr.str, &mut attr_add.str, &mut points, -1);
                   };
-                }));
-                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                });
+                ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
                   ui.label("Dexterity");
                   ui.label((attr.dex + attr_add.dex).to_string());
                   if ui.button("-").clicked() {};
                   if ui.button("+").clicked() {};
-                }));
-                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                });
+                ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
                   ui.label("Constitution");
                   ui.label((attr.con + attr_add.con).to_string());
                   if ui.button("-").clicked() {};
                   if ui.button("+").clicked() {};
-                }));
-                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                });
+                ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
                   ui.label("Intelligence");
                   ui.label((attr.int + attr_add.int).to_string());
                   if ui.button("-").clicked() {};
                   if ui.button("+").clicked() {};
-                }));
-                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                });
+                ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
                   ui.label("Wisdom");
                   ui.label((attr.wis + attr_add.wis).to_string());
                   if ui.button("-").clicked() {};
                   if ui.button("+").clicked() {};
-                }));
-                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                });
+                ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
                   ui.label("Charisma");
                   ui.label((attr.cha + attr_add.cha).to_string());
                   if ui.button("-").clicked() {};
                   if ui.button("+").clicked() {};
-                }));
+                });
             });
     }
 }
