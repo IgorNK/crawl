@@ -34,7 +34,7 @@ impl crate::Window for CharacterGenComponent {
 
 impl crate::View for CharacterGenComponent {
     fn ui(&mut self, ui: &mut egui::Ui) {
-        let Self {mut attr, mut attr_add, mut points} = self;
+        let Self {&mut attr, &mut attr_add, &mut points} = self;
 
         egui::ScrollArea::vertical()
             .auto_shrink([false; 2])
@@ -43,10 +43,10 @@ impl crate::View for CharacterGenComponent {
                   ui.label("Strength");
                   ui.label((attr.str + attr_add.str).to_string());
                   if ui.button("-").clicked() {
-                    adjust_count(&attr.str, &mut attr_add.str, &mut points, 1);
+                    adjust_count(attr.str, attr_add.str, points, 1);
                   };
                   if ui.button("+").clicked() {
-                    adjust_count(&attr.str, &mut attr_add.str, &mut points, -1);
+                    adjust_count(attr.str, attr_add.str, points, -1);
                   };
                 });
                 ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
