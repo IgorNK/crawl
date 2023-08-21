@@ -1,12 +1,20 @@
-use crate::model::PlayerCharacter;
-use eframe::egui;
+use crate::model::{PlayerCharacter, Attributes};
+use eframe::egui::{self, Layout, Align};
 
-pub struct CharacterGenComponent {}
+pub struct CharacterGenComponent {
+  attr: Attributes,
+  attr_add: Attributes,
+  points: u32,
+}
 
 impl Default for CharacterGenComponent {
     fn default() -> Self {
         dbg!("Call to character component default creation");
-        CharacterGenComponent {}
+        CharacterGenComponent {
+          attr: Attributes::new(10),
+          attr_add: Attributes::new(0),
+          points: 27,
+        }
     }
 }
 
@@ -26,17 +34,66 @@ impl crate::Window for CharacterGenComponent {
 
 impl crate::View for CharacterGenComponent {
     fn ui(&mut self, ui: &mut egui::Ui) {
-        let Self {} = self;
+        let Self {attr, attr_add, points} = self;
 
         egui::ScrollArea::vertical()
             .auto_shrink([false; 2])
             .show(ui, |ui| {
-                ui.label("Strength");
-                ui.label("Dexterity");
-                ui.label("Constitution");
-                ui.label("Intelligence");
-                ui.label("Wisdom");
-                ui.label("Charisma");
+                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                  ui.label("Strength");
+                  ui.label((attr.str + attr_add.str).to_string());
+                  ui.button("-", clicked() {
+                    adjust_count(&attr.str, &mut attr_add.str, &mut points, 1);
+                  });
+                  ui.button("+", clicked() {
+                    adjust_count(&attr.str, &mut attr_add.str, &mut points, -1);
+                  })
+                };
+                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                  ui.label("Dexterity");
+                  ui.label((attr.dex + attr_add.dex).to_string());
+                  ui.button("-", clicked() {});
+                  ui.button("+", clicked() {})
+                };
+                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                  ui.label("Constitution");
+                  ui.label((attr.con + attr_add.con).to_string());
+                  ui.button("-", clicked() {});
+                  ui.button("+", clicked() {})
+                };
+                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                  ui.label("Intelligence");
+                  ui.label((attr.int + attr_add.int).to_string());
+                  ui.button("-", clicked() {});
+                  ui.button("+", clicked() {})
+                };
+                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                  ui.label("Wisdom");
+                  ui.label((attr.wis + attr_add.wis).to_string());
+                  ui.button("-", clicked() {});
+                  ui.button("+", clicked() {})
+                };
+                ui.with_layout(Layout::left_to_right(Align::TOP, |ui| {
+                  ui.label("Charisma");
+                  ui.label((attr.cha + attr_add.cha).to_string());
+                  ui.button("-", clicked() {});
+                  ui.button("+", clicked() {})
+                };
             });
+    }
+}
+
+fn can_add(attr: &i8, attr_add: &i8, points: &u32) -> bool {
+  return (attr + attr_add + 1) < 20 && points > 0
+}
+
+fn can_subtract(attr_add: &i8, points: &u32) -> bool {
+  return (attr_add - 1) > 0 && points < 27
+}
+
+fn adjust_count(attr: &i8, attr_add: &mut i8, points: &mut u32, amount: i8) {
+    if (attr + attr_add + amount) < 20 && (attr_add + amount) > 0 {
+      attr_add += amount;
+      points -= amount;
     }
 }

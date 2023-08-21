@@ -5,6 +5,20 @@ pub struct Attributes {
     con: i8,
     int: i8,
     wis: i8,
+    cha: i8,
+}
+
+impl Attributes {
+  pub fn new(val: i8) -> Self {
+    Attributes {
+      str: val,
+      dex: val,
+      con: val,
+      int: val,
+      wis: val,
+      cha: val,
+    }
+  }
 }
 
 pub struct PlayerCharacter<'a> {

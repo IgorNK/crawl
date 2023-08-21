@@ -14,9 +14,6 @@ impl Default for Windows {
         Windows::from_windows(vec![
             Box::<crate::character_gen::CharacterGenComponent>::default(),
         ])
-        // let windows =
-        //     Self::from_windows(Box::<crate::character_gen::CharacterGenComponent>::default());
-        // widows
     }
 }
 
