@@ -34,7 +34,7 @@ impl crate::Window for CharacterGenComponent {
 
 impl crate::View for CharacterGenComponent {
     fn ui(&mut self, ui: &mut egui::Ui) {
-        let Self {&mut attr, &mut attr_add, &mut points} = self;
+        let Self {ref mut attr, ref mut attr_add, ref mut points} = self;
 
         egui::ScrollArea::vertical()
             .auto_shrink([false; 2])
