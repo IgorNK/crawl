@@ -79,7 +79,7 @@ impl crate::View for CharacterGenComponent {
                   ui.button("-", clicked() {});
                   ui.button("+", clicked() {})
                 };
-            });
+            }));
     }
 }
 
