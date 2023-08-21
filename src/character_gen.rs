@@ -84,16 +84,16 @@ impl crate::View for CharacterGenComponent {
 }
 
 fn can_add(attr: &i8, attr_add: &i8, points: &u32) -> bool {
-  return (attr + attr_add + 1) < 20 && points > 0
+  return (*attr + *attr_add + 1) < 20 && *points > 0
 }
 
 fn can_subtract(attr_add: &i8, points: &u32) -> bool {
-  return (attr_add - 1) > 0 && points < 27
+  return (*attr_add - 1) > 0 && *points < 27
 }
 
 fn adjust_count(attr: &i8, attr_add: &mut i8, points: &mut u32, amount: i8) {
-    if (attr + attr_add + amount) < 20 && (attr_add + amount) > 0 {
-      attr_add += amount;
-      points -= amount;
+    if (*attr + *attr_add + *amount) < 20 && (*attr_add + *amount) > 0 {
+      *attr_add += *amount;
+      *points -= *amount;
     }
 }

@@ -1,11 +1,11 @@
 #[derive(Default, Clone)]
 pub struct Attributes {
-    str: i8,
-    dex: i8,
-    con: i8,
-    int: i8,
-    wis: i8,
-    cha: i8,
+    pub str: i8,
+    pub dex: i8,
+    pub con: i8,
+    pub int: i8,
+    pub wis: i8,
+    pub cha: i8,
 }
 
 impl Attributes {
