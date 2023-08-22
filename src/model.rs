@@ -1,23 +1,21 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
-#[derive(Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct SystemData {
-  pub races: Option<Vec<Race>>,
-  pub classes: Option<Vec<Class>>,
+    pub races: Option<Vec<Race>>,
+    pub classes: Option<Vec<Class>>,
 }
 
 impl Default for SystemData {
-  fn default() -> Self {
-    SystemData {
-      races: None,
-      classes: None,
+    fn default() -> Self {
+        SystemData {
+            races: None,
+            classes: None,
+        }
     }
-  }
 }
 
-#[derive(Deserialize, Serialize)]
-#[derive(Default, Clone, Copy)]
+#[derive(Deserialize, Serialize, Default, Clone, Copy)]
 pub struct Attributes {
     pub str: i8,
     pub dex: i8,
@@ -28,16 +26,16 @@ pub struct Attributes {
 }
 
 impl Attributes {
-  pub fn new(val: i8) -> Self {
-    Attributes {
-      str: val,
-      dex: val,
-      con: val,
-      int: val,
-      wis: val,
-      cha: val,
+    pub fn new(val: i8) -> Self {
+        Attributes {
+            str: val,
+            dex: val,
+            con: val,
+            int: val,
+            wis: val,
+            cha: val,
+        }
     }
-  }
 }
 
 pub struct PlayerCharacter<'a> {
@@ -63,8 +61,7 @@ impl<'a> PlayerCharacter<'a> {
     }
 }
 
-#[derive(Deserialize, Serialize)]
-#[derive(Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct Race {
     pub name: String,
     pub attr_bonus: Attributes,
@@ -79,18 +76,17 @@ impl Default for Race {
     }
 }
 
-#[derive(Deserialize, Serialize)]
-#[derive(Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct Class {
     pub name: String,
 }
 
 impl Default for Class {
-  fn default() -> Class {
-    Class {
-      name: "Fighter".to_string(),
+    fn default() -> Class {
+        Class {
+            name: "Fighter".to_string(),
+        }
     }
-  }
 }
 
 pub struct PlayerCharacterBuilder<'a> {

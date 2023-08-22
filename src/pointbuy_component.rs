@@ -1,4 +1,4 @@
-use crate::model::{Attributes};
+use crate::model::Attributes;
 use eframe::egui::{self, Align, Layout};
 
 pub struct PointBuyComponent {
@@ -34,13 +34,15 @@ impl crate::View for PointBuyComponent {
             ("Charisma", &mut attr.cha, &mut attr_add.cha),
         ];
 
-        let _ = fields.map(|field| {
-            add_field(ui, field, points);
-        });
-      
-        ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
-            ui.label("Points left: ");
-            ui.label(points.to_string());
+        egui::Frame::none().show(ui, |ui| {
+            let _ = fields.map(|field| {
+                add_field(ui, field, points);
+            });
+
+            ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
+                ui.label("Points left: ");
+                ui.label(points.to_string());
+            });
         });
     }
 }

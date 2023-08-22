@@ -7,7 +7,6 @@ use std::sync::mpsc::{self, Receiver, Sender};
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct TemplateApp {
-
     #[serde(skip)]
     windows: Windows,
 
@@ -56,11 +55,7 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self {
-            windows,
-            tx,
-            rx,
-        } = self;
+        let Self { windows, tx, rx } = self;
 
         if let Ok(result) = rx.try_recv() {
             match result {
@@ -71,12 +66,12 @@ impl eframe::App for TemplateApp {
                 }
                 ResponseData::PostResponse(result) => {
                     if let Ok(_result) = result {
-                       // *todo_title = String::new();
-                       // *todo_content = String::new();
-                       // #[cfg(target_arch = "wasm32")]
-                       // api::get_todos_web(tx.clone());
-                       // #[cfg(not(target_arch = "wasm32"))]
-                       // api::get_todos(tx.clone());
+                        // *todo_title = String::new();
+                        // *todo_content = String::new();
+                        // #[cfg(target_arch = "wasm32")]
+                        // api::get_todos_web(tx.clone());
+                        // #[cfg(not(target_arch = "wasm32"))]
+                        // api::get_todos(tx.clone());
                     }
                 }
             }
@@ -109,8 +104,6 @@ impl eframe::App for TemplateApp {
                 window_manager::set_open(&mut windows.open, "New Character", new_character_open);
             });
         });
-
-
 
         egui::CentralPanel::default().show(ctx, |ui| {
             windows.windows(ctx);

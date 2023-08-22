@@ -12,7 +12,7 @@ impl Default for Windows {
     fn default() -> Self {
         dbg!("call to default window creation");
         Windows::from_windows(vec![
-            Box::<crate::character_gen::CharacterGenComponent<'_>>::default(),
+            Box::<crate::character_gen::CharacterGenComponent>::default(),
         ])
     }
 }

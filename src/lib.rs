@@ -1,20 +1,19 @@
 #![warn(clippy::all, rust_2018_idioms)]
 #[macro_use]
-
 use eframe::egui;
-use model::SystemData;
 use arc_swap::ArcSwap;
-use std::sync::Arc;
 use lazy_static::lazy_static;
+use model::SystemData;
+use std::sync::Arc;
 
 mod api;
 mod app;
 mod character_gen;
-mod pointbuy_component;
-mod raceselect_component;
 mod classselect_component;
 mod mock_db;
 mod model;
+mod pointbuy_component;
+mod raceselect_component;
 mod todos;
 mod window_manager;
 pub use app::TemplateApp;
@@ -28,9 +27,6 @@ pub trait Window {
     fn show(&mut self, ctx: &egui::Context, open: &mut bool);
 }
 
-
 lazy_static! {
-  static ref STORE: ArcSwap<SystemData> = {
-    ArcSwap::from(Arc::new(mock_db::mock_db()))
-  };
+    static ref STORE: ArcSwap<SystemData> = { ArcSwap::from(Arc::new(mock_db::mock_db())) };
 }

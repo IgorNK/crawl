@@ -1,24 +1,24 @@
+use crate::classselect_component::ClassSelectComponent;
 use crate::model::{Attributes, PlayerCharacter, SystemData};
 use crate::pointbuy_component::PointBuyComponent;
 use crate::raceselect_component::RaceSelectComponent;
-use crate::classselect_component::ClassSelectComponent;
-use eframe::egui::{self, Align, Layout};
 use arc_swap::ArcSwap;
+use eframe::egui::{self, Align, Layout};
 use std::sync::Arc;
 
 pub struct CharacterGenComponent {
-  point_buy: PointBuyComponent,
-  race_select: RaceSelectComponent,
-  class_select: ClassSelectComponent,
+    point_buy: PointBuyComponent,
+    race_select: RaceSelectComponent,
+    class_select: ClassSelectComponent,
 }
 
 impl Default for CharacterGenComponent {
     fn default() -> Self {
-      CharacterGenComponent {
-        point_buy: PointBuyComponent::default(),
-        race_select: RaceSelectComponent::default(),
-        class_select: ClassSelectComponent::default(),
-      }
+        CharacterGenComponent {
+            point_buy: PointBuyComponent::default(),
+            race_select: RaceSelectComponent::default(),
+            class_select: ClassSelectComponent::default(),
+        }
     }
 }
 
@@ -39,35 +39,28 @@ impl crate::Window for CharacterGenComponent {
 impl crate::View for CharacterGenComponent {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
-          ref mut point_buy,
-          ref mut race_select,
-          ref mut class_select,
+            ref mut point_buy,
+            ref mut race_select,
+            ref mut class_select,
         } = self;
-        let db: ArcSwap<Arc<SystemData>> = crate::STORE.load();
-        ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
+        let db: arc_swap::Guard<Arc<SystemData>> = crate::STORE.load();
 
-          ui.button("<");
-
-          egui::ScrollArea::vertical()
-            .auto_shrink([false; 2])
-            .show(ui, |ui| {
-                race_select.with_db(db).ui(ui);
-            });
-
-          egui::ScrollArea::vertical()
-            .auto_shrink([false; 2])
-            .show(ui, |ui| {
-                point_buy.ui(ui);
-            });
-
-          egui::ScrollArea::vertical()
-            .auto_shrink([false; 2])
-            .show(ui, |ui| {
-                class_select.with_db(db).ui(ui);
-            });
-
-          ui.button(">");
-          
+        ui.columns(3, |columns| {
+            egui::ScrollArea::vertical()
+                .id_source("race_select")
+                .show(&mut columns[0], |ui| {
+                    race_select.with_db(&*db).ui(ui);
+                });
+            egui::ScrollArea::vertical()
+                .id_source("point_buy")
+                .show(&mut columns[1], |ui| {
+                    point_buy.ui(ui);
+                });
+            egui::ScrollArea::vertical()
+                .id_source("class_select")
+                .show(&mut columns[2], |ui| {
+                    class_select.with_db(&*db).ui(ui);
+                })
         });
     }
 }
