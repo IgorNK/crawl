@@ -23,7 +23,7 @@ impl crate::View for ClassSelectComponent<'_> {
             if let Some(db) = db {
               if let Some(classes) = db.classes {
                 let _: Vec<_> = classes.iter().map(|class| {
-                  ui.button(class.name);
+                  ui.button(&class.name);
                 }).collect();
               };
             };

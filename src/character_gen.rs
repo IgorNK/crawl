@@ -6,8 +6,8 @@ use eframe::egui::{self, Align, Layout};
 
 pub struct CharacterGenComponent<'a> {
   point_buy: PointBuyComponent,
-  race_select: RaceSelectComponent<'a>,
-  class_select: ClassSelectComponent<'a>,
+  race_select: mut RaceSelectComponent<'a>,
+  class_select: mut ClassSelectComponent<'a>,
 }
 
 impl Default for CharacterGenComponent<'_> {
@@ -38,8 +38,8 @@ impl crate::View for CharacterGenComponent<'_> {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
           point_buy,
-          race_select,
-          class_select,
+          mut race_select,
+          mut class_select,
         } = self;
         let db: &SystemData = **crate::STORE.load();
         ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
