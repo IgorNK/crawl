@@ -10,7 +10,7 @@ pub struct CharacterGenComponent<'a> {
   class_select: ClassSelectComponent<'a>,
 }
 
-impl Default for CharacterGenComponent {
+impl Default for CharacterGenComponent<'_> {
     fn default() -> Self {
       CharacterGenComponent {
         point_buy: PointBuyComponent::default(),
@@ -20,7 +20,7 @@ impl Default for CharacterGenComponent {
     }
 }
 
-impl crate::Window for CharacterGenComponent {
+impl crate::Window for CharacterGenComponent<'_> {
     fn name(&self) -> &'static str {
         "New Character"
     }
@@ -34,7 +34,7 @@ impl crate::Window for CharacterGenComponent {
     }
 }
 
-impl crate::View for CharacterGenComponent {
+impl crate::View for CharacterGenComponent<'_> {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
           point_buy,

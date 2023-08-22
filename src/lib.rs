@@ -1,7 +1,10 @@
 #![warn(clippy::all, rust_2018_idioms)]
+#[macro_use]
 
 use eframe::egui;
+use model::SystemData;
 use arc_swap::ArcSwap;
+use std::sync::Arc;
 use lazy_static::lazy_static;
 
 mod api;
@@ -25,8 +28,7 @@ pub trait Window {
     fn show(&mut self, ctx: &egui::Context, open: &mut bool);
 }
 
+
 lazy_static! {
-  static ref STORE: ArcSwap<&'static SystemData> = {
-    ArcSwap::from(Arc::new(mock_db::mock_db()))
-  };
+  static ref STORE = ArcSwap::from(Arc::new(mock_db::mock_db()));
 }
