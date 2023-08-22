@@ -6,8 +6,8 @@ use eframe::egui::{self, Align, Layout};
 
 pub struct CharacterGenComponent<'a> {
   point_buy: PointBuyComponent,
-  race_select: mut RaceSelectComponent<'a>,
-  class_select: mut ClassSelectComponent<'a>,
+  race_select: RaceSelectComponent<'a>,
+  class_select: ClassSelectComponent<'a>,
 }
 
 impl Default for CharacterGenComponent<'_> {
