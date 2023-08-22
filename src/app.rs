@@ -7,17 +7,10 @@ use std::sync::mpsc::{self, Receiver, Sender};
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct TemplateApp {
-    // Example stuff:
-    label: String,
-    todo_title: String,
-    todo_content: String,
-    todos: TodoList,
+
     #[serde(skip)]
     windows: Windows,
 
-    // this how you opt-out of serialization of a member
-    #[serde(skip)]
-    value: f32,
     #[serde(skip)]
     tx: Sender<ResponseData>,
     #[serde(skip)]
@@ -29,13 +22,7 @@ impl Default for TemplateApp {
         let (tx, rx) = mpsc::channel();
 
         Self {
-            // Example stuff:
-            label: "Hello World!".to_owned(),
-            todo_title: "Title".to_owned(),
-            todo_content: "What do I need to do?".to_owned(),
-            todos: TodoList { todos: vec![] },
             windows: Windows::default(),
-            value: 2.7,
             tx,
             rx,
         }
@@ -70,11 +57,6 @@ impl eframe::App for TemplateApp {
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         let Self {
-            label,
-            todo_title,
-            todo_content,
-            value,
-            todos,
             windows,
             tx,
             rx,
@@ -84,17 +66,17 @@ impl eframe::App for TemplateApp {
             match result {
                 ResponseData::GetResponse(result) => {
                     if let Ok(result) = result {
-                        todos.todos = result;
+                        //todos.todos = result;
                     }
                 }
                 ResponseData::PostResponse(result) => {
                     if let Ok(_result) = result {
-                        *todo_title = String::new();
-                        *todo_content = String::new();
-                        #[cfg(target_arch = "wasm32")]
-                        api::get_todos_web(tx.clone());
-                        #[cfg(not(target_arch = "wasm32"))]
-                        api::get_todos(tx.clone());
+                       // *todo_title = String::new();
+                       // *todo_content = String::new();
+                       // #[cfg(target_arch = "wasm32")]
+                       // api::get_todos_web(tx.clone());
+                       // #[cfg(not(target_arch = "wasm32"))]
+                       // api::get_todos(tx.clone());
                     }
                 }
             }
@@ -116,73 +98,21 @@ impl eframe::App for TemplateApp {
                     }
                 });
 
-                if ui.button("fetch").clicked() {
-                    #[cfg(target_arch = "wasm32")]
-                    api::get_todos_web(tx.clone());
-                    #[cfg(not(target_arch = "wasm32"))]
-                    api::get_todos(tx.clone());
-                }
+                //if ui.button("fetch").clicked() {
+                //    #[cfg(target_arch = "wasm32")]
+                //    api::get_todos_web(tx.clone());
+                //    #[cfg(not(target_arch = "wasm32"))]
+                //    api::get_todos(tx.clone());
+                //}
                 let mut new_character_open = windows.open.contains("New Character");
                 ui.toggle_value(&mut new_character_open, "New Character");
                 window_manager::set_open(&mut windows.open, "New Character", new_character_open);
             });
         });
 
-        // egui::SidePanel::left("side_panel").show(ctx, |ui| {
-        //     ui.heading("Side Panel");
-        //
-        //     ui.horizontal(|ui| {
-        //         ui.label("Write something: ");
-        //         ui.text_edit_singleline(label);
-        //     });
-        //
-        //     ui.add(egui::Slider::new(value, 0.0..=10.0).text("value"));
-        //     if ui.button("Increment").clicked() {
-        //         *value += 1.0;
-        //     }
-        //
-        //     ui.text_edit_singleline(todo_title);
-        //     ui.text_edit_singleline(todo_content);
-        //     if ui.button("post").clicked() {
-        //         #[cfg(target_arch = "wasm32")]
-        //         api::create_todo_web(Todo::new(todo_title, todo_content), tx.clone());
-        //         #[cfg(not(target_arch = "wasm32"))]
-        //         api::create_todo(Todo::new(todo_title, todo_content), tx.clone());
-        //     }
-        //
-        //     ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
-        //         ui.horizontal(|ui| {
-        //             ui.spacing_mut().item_spacing.x = 0.0;
-        //             ui.label("powered by ");
-        //             ui.hyperlink_to("egui", "https://github.com/emilk/egui");
-        //             ui.label(" and ");
-        //             ui.hyperlink_to(
-        //                 "eframe",
-        //                 "https://github.com/emilk/egui/tree/master/crates/eframe",
-        //             );
-        //             ui.label(".");
-        //         });
-        //     });
-        // });
+
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            // The central panel the region left after adding TopPanel's and SidePanel's
-
-            // ui.heading("eframe template");
-            // ui.hyperlink("https://github.com/emilk/eframe_template");
-            // let _: Vec<_> = todos
-            //     .todos
-            //     .iter()
-            //     .map(|todo| {
-            //         ui.label(&todo.title);
-            //         ui.label(&todo.content);
-            //         ui.separator();
-            //     })
-            //     .collect();
-            // ui.add(egui::github_link_file!(
-            //     "https://github.com/emilk/eframe_template/blob/master/",
-            //     "Source code."
-            // ));
             windows.windows(ctx);
             egui::warn_if_debug_build(ui);
         });

@@ -1,5 +1,6 @@
 use crate::View;
 use crate::Window;
+use crate::mock_db::SystemData;
 use eframe::egui;
 use std::collections::BTreeSet;
 
@@ -23,7 +24,7 @@ impl Windows {
         Self { windows, open }
     }
 
-    pub fn windows(&mut self, ctx: &egui::Context) {
+    pub fn windows(&mut self, ctx: &egui::Context, db: SystemData) {
         let Self { windows, open } = self;
         for window in windows {
             let mut is_open = open.contains(window.name());

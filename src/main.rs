@@ -1,7 +1,21 @@
 #![warn(clippy::all, rust_2018_idioms)]
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
+use mock_db::SystemData;
+use arc_swap::ArcSwap;
+use std::sync::Arc;
 use tokio::runtime::Builder;
+
+lazy_static! {
+  static ref STORE: ArcSwap<&'static SystemData> = {
+    ArcSwap::from(Arc::new(mock_db::mock_db()))
+  };
+}
+
+// Example of use:
+// assert_eq!(**STORE.load(), "hello");
+// STORE.swap(Arc::new("world"));
+// assert_eq!(**STORE.load(), "hello");
 
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]

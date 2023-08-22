@@ -1,4 +1,13 @@
-#[derive(Default, Clone)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Deserialize, Serialize)]
+pub struct SystemData {
+  pub races: Option<Vec<Race>>,
+  pub classes: Option<Vec<Class>>,
+}
+
+#[derive(Deserialize, Serialize)]
+#[derive(Default, Clone, Copy)]
 pub struct Attributes {
     pub str: i8,
     pub dex: i8,
@@ -44,6 +53,7 @@ impl<'a> PlayerCharacter<'a> {
     }
 }
 
+#[derive(Deserialize, Serialize)]
 pub struct Race {
     name: String,
     attr_bonus: Attributes,
@@ -58,9 +68,17 @@ impl Default for Race {
     }
 }
 
-#[derive(Default)]
+#[derive(Deserialize, Serialize)]
 pub struct Class {
     name: String,
+}
+
+impl Default for Class {
+  fn default() -> Class {
+    Class {
+      name: "Fighter".to_string(),
+    }
+  }
 }
 
 pub struct PlayerCharacterBuilder<'a> {

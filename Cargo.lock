@@ -122,6 +122,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "arc-swap"
+version = "1.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bddcadddf5e9015d310179a59bb28c4d4b9920ad0f11e8e14dbadf654890c9a6"
+
+[[package]]
 name = "arrayref"
 version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -416,10 +422,12 @@ dependencies = [
 name = "crawl"
 version = "0.1.0"
 dependencies = [
+ "arc-swap",
  "chrono",
  "eframe",
  "egui",
  "env_logger",
+ "lazy_static",
  "log",
  "reqwest",
  "reqwest-wasm",
