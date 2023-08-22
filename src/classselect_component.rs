@@ -32,7 +32,7 @@ impl crate::View for ClassSelectComponent<'_> {
 }
 
 impl<'a> ClassSelectComponent<'a> {
-  pub fn with_db (&mut self, db: &'a SystemData) -> Self {
+  pub fn with_db (&mut self, db: &'a SystemData) -> &mut ClassSelectComponent<'a> {
     self.db = Some(db);
     self
   }

@@ -32,7 +32,7 @@ impl crate::View for RaceSelectComponent<'_> {
 }
 
 impl<'a> RaceSelectComponent<'a> {
-  pub fn with_db (&mut self, db: &'a SystemData) -> Self {
+  pub fn with_db (&mut self, db: &'a SystemData) -> &mut RaceSelectComponent<'a> {
     self.db = Some(db);
     self
   }
