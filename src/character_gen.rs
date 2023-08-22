@@ -41,7 +41,7 @@ impl crate::View for CharacterGenComponent<'_> {
           ref mut race_select,
           ref mut class_select,
         } = self;
-        let db: &SystemData = *crate::STORE.load();
+        let db: &SystemData = &*crate::STORE.load();
         ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
 
           ui.button("<");
