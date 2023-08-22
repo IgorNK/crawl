@@ -6,6 +6,15 @@ pub struct SystemData {
   pub classes: Option<Vec<Class>>,
 }
 
+impl Default for SystemData {
+  fn default() -> Self {
+    SystemData {
+      races: None,
+      classes: None,
+    }
+  }
+}
+
 #[derive(Deserialize, Serialize)]
 #[derive(Default, Clone, Copy)]
 pub struct Attributes {
