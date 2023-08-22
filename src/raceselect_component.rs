@@ -1,8 +1,8 @@
 use crate::model::{SystemData, Race, Attributes};
 use eframe::egui::{self, Align, Layout};
 
-pub struct RaceSelectComponent {
-    db: Option<&SystemData>
+pub struct RaceSelectComponent<'a> {
+    db: Option<&'a SystemData>
 }
 
 impl Default for RaceSelectComponent {
@@ -22,17 +22,17 @@ impl crate::View for RaceSelectComponent {
             ui.label("Race: ");
             if let Some(db) = db {
               if let Some(races) = db.races {
-                let _ = races.map(|race| {
+                let _: Vec<_> = races.iter().map(|race| {
                   ui.button(race.name);
-                });
+                }).collect();
               };
             };
 
     }
 }
 
-impl RaceSelectComponent {
-  pub fn with_db(mut self, db: &SystemData) -> Self {
+impl RaceSelectComponent<'a> {
+  pub fn with_db(mut self, db: &'a SystemData) -> Self {
     self.db = Some(db);
     self
   }

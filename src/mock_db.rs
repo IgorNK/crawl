@@ -13,5 +13,5 @@ fn mock_db() -> SystemData {
     });
   }
 
-  SystemData { races, classes }
+  SystemData { races: Some(races), classes: Some(classes) }
 }

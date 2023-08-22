@@ -22,3 +22,9 @@ pub trait Window {
     fn name(&self) -> &'static str;
     fn show(&mut self, ctx: &egui::Context, open: &mut bool);
 }
+
+lazy_static! {
+  static ref STORE: ArcSwap<&'static SystemData> = {
+    ArcSwap::from(Arc::new(mock_db::mock_db()))
+  };
+}

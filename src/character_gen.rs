@@ -1,6 +1,7 @@
 use crate::model::{Attributes, PlayerCharacter, SystemData};
 use crate::pointbuy_component::PointBuyComponent;
 use crate::raceselect_component::RaceSelectComponent;
+use crate::classselect_component::ClassSelectComponent;
 use eframe::egui::{self, Align, Layout};
 
 pub struct CharacterGenComponent {

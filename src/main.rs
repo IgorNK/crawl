@@ -6,12 +6,6 @@ use arc_swap::ArcSwap;
 use std::sync::Arc;
 use tokio::runtime::Builder;
 
-lazy_static! {
-  static ref STORE: ArcSwap<&'static SystemData> = {
-    ArcSwap::from(Arc::new(mock_db::mock_db()))
-  };
-}
-
 // Example of use:
 // assert_eq!(**STORE.load(), "hello");
 // STORE.swap(Arc::new("world"));

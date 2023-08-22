@@ -1,8 +1,8 @@
 use crate::model::{SystemData, Class, Attributes};
 use eframe::egui::{self, Align, Layout};
 
-pub struct ClassSelectComponent {
-    db: Option<&SystemData>,
+pub struct ClassSelectComponent<'a> {
+    db: Option<&'a SystemData>,
 }
 
 impl Default for ClassSelectComponent {
@@ -22,17 +22,17 @@ impl crate::View for ClassSelectComponent {
             ui.label("Class: ");
             if let Some(db) = db {
               if let Some(classes) = db.classes {
-                let _ = classes.map(|class| {
+                let _: Vec<_> = classes.iter().map(|class| {
                   ui.button(class.name);
-                });
+                }).collect();
               };
             };
 
     }
 }
 
-impl ClassSelectComponent {
-  pub fn with_db(mut self, db: &SystemData) -> Self {
+impl ClassSelectComponent<'a> {
+  pub fn with_db(mut self, db: &'a SystemData) -> Self {
     self.db = Some(db);
     self
   }
