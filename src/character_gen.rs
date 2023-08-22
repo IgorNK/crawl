@@ -34,14 +34,14 @@ impl crate::Window for CharacterGenComponent<'_> {
     }
 }
 
-impl crate::View for CharacterGenComponent<'_> {
+impl crate::View for CharacterGenComponent<'a> {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
           ref mut point_buy,
           ref mut race_select,
           ref mut class_select,
         } = self;
-        let db: &SystemData = &*crate::STORE.load();
+        let db: &'a SystemData = &**crate::STORE.load();
         ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
 
           ui.button("<");
