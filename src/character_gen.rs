@@ -34,7 +34,7 @@ impl crate::Window for CharacterGenComponent<'_> {
     }
 }
 
-impl crate::View for CharacterGenComponent<'a> {
+impl<'a> crate::View for CharacterGenComponent<'a> {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
           ref mut point_buy,
