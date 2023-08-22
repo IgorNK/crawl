@@ -55,8 +55,8 @@ impl<'a> PlayerCharacter<'a> {
 
 #[derive(Deserialize, Serialize)]
 pub struct Race {
-    name: String,
-    attr_bonus: Attributes,
+    pub name: String,
+    pub attr_bonus: Attributes,
 }
 
 impl Default for Race {
@@ -70,7 +70,7 @@ impl Default for Race {
 
 #[derive(Deserialize, Serialize)]
 pub struct Class {
-    name: String,
+    pub name: String,
 }
 
 impl Default for Class {

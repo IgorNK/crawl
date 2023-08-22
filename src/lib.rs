@@ -1,6 +1,8 @@
 #![warn(clippy::all, rust_2018_idioms)]
 
 use eframe::egui;
+use arc_swap::ArcSwap;
+use lazy_static::lazy_static;
 
 mod api;
 mod app;

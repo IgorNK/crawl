@@ -5,7 +5,7 @@ pub struct ClassSelectComponent<'a> {
     db: Option<&'a SystemData>,
 }
 
-impl Default for ClassSelectComponent {
+impl Default for ClassSelectComponent<'_> {
     fn default() -> Self {
         ClassSelectComponent {
             db: None,
@@ -13,7 +13,7 @@ impl Default for ClassSelectComponent {
     }
 }
 
-impl crate::View for ClassSelectComponent {
+impl crate::View for ClassSelectComponent<'_> {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
             db,
@@ -31,8 +31,8 @@ impl crate::View for ClassSelectComponent {
     }
 }
 
-impl ClassSelectComponent<'a> {
-  pub fn with_db(mut self, db: &'a SystemData) -> Self {
+impl<'a> ClassSelectComponent<'a> {
+  pub fn with_db<'a>(mut self, db: &'a SystemData) -> Self {
     self.db = Some(db);
     self
   }

@@ -2,7 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
 use mock_db::SystemData;
-use arc_swap::ArcSwap;
 use std::sync::Arc;
 use tokio::runtime::Builder;
 

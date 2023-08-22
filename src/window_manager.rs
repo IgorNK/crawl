@@ -23,7 +23,7 @@ impl Windows {
         Self { windows, open }
     }
 
-    pub fn windows(&mut self, ctx: &egui::Context, db: SystemData) {
+    pub fn windows(&mut self, ctx: &egui::Context) {
         let Self { windows, open } = self;
         for window in windows {
             let mut is_open = open.contains(window.name());

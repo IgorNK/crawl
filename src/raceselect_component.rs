@@ -5,7 +5,7 @@ pub struct RaceSelectComponent<'a> {
     db: Option<&'a SystemData>
 }
 
-impl Default for RaceSelectComponent {
+impl Default for RaceSelectComponent<'_> {
     fn default() -> Self {
         RaceSelectComponent {
             db: None,
@@ -13,7 +13,7 @@ impl Default for RaceSelectComponent {
     }
 }
 
-impl crate::View for RaceSelectComponent {
+impl crate::View for RaceSelectComponent<'_> {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
             db
@@ -31,8 +31,8 @@ impl crate::View for RaceSelectComponent {
     }
 }
 
-impl RaceSelectComponent<'a> {
-  pub fn with_db(mut self, db: &'a SystemData) -> Self {
+impl<'a> RaceSelectComponent<'a> {
+  pub fn with_db<'a>(mut self, db: &'a SystemData) -> Self {
     self.db = Some(db);
     self
   }

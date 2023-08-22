@@ -4,10 +4,10 @@ use crate::raceselect_component::RaceSelectComponent;
 use crate::classselect_component::ClassSelectComponent;
 use eframe::egui::{self, Align, Layout};
 
-pub struct CharacterGenComponent {
+pub struct CharacterGenComponent<'a> {
   point_buy: PointBuyComponent,
-  race_select: RaceSelectComponent,
-  class_select: ClassSelectComponent,
+  race_select: RaceSelectComponent<'a>,
+  class_select: ClassSelectComponent<'a>,
 }
 
 impl Default for CharacterGenComponent {
