@@ -1,11 +1,13 @@
 use crate::model::{SystemData, Class, Attributes};
 use eframe::egui::{self, Align, Layout};
+use arc_swap::ArcSwap;
+use std::sync::Arc;
 
-pub struct ClassSelectComponent<'a> {
-    db: Option<&'a SystemData>,
+pub struct ClassSelectComponent {
+    db: Option<ArcSwap<Arc<SystemData>>>,
 }
 
-impl Default for ClassSelectComponent<'_> {
+impl Default for ClassSelectComponent {
     fn default() -> Self {
         ClassSelectComponent {
             db: None,
@@ -13,7 +15,7 @@ impl Default for ClassSelectComponent<'_> {
     }
 }
 
-impl crate::View for ClassSelectComponent<'_> {
+impl crate::View for ClassSelectComponent {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
             db,
@@ -31,8 +33,8 @@ impl crate::View for ClassSelectComponent<'_> {
     }
 }
 
-impl<'a> ClassSelectComponent<'a> {
-  pub fn with_db (&mut self, db: &'a SystemData) -> &mut ClassSelectComponent<'a> {
+impl ClassSelectComponent {
+  pub fn with_db (&mut self, db: ArcSwap<Arc<SystemData>>) -> &mut ClassSelectComponent {
     self.db = Some(db);
     self
   }

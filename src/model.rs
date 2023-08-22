@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize)]
+#[derive(Clone, Copy)]
 pub struct SystemData {
   pub races: Option<Vec<Race>>,
   pub classes: Option<Vec<Class>>,
@@ -63,6 +64,7 @@ impl<'a> PlayerCharacter<'a> {
 }
 
 #[derive(Deserialize, Serialize)]
+#[derive(Clone, Copy)]
 pub struct Race {
     pub name: String,
     pub attr_bonus: Attributes,
@@ -78,6 +80,7 @@ impl Default for Race {
 }
 
 #[derive(Deserialize, Serialize)]
+#[derive(Clone, Copy)]
 pub struct Class {
     pub name: String,
 }

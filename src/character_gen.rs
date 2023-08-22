@@ -3,14 +3,16 @@ use crate::pointbuy_component::PointBuyComponent;
 use crate::raceselect_component::RaceSelectComponent;
 use crate::classselect_component::ClassSelectComponent;
 use eframe::egui::{self, Align, Layout};
+use arc_swap::ArcSwap;
+use std::sync::Arc;
 
-pub struct CharacterGenComponent<'a> {
+pub struct CharacterGenComponent {
   point_buy: PointBuyComponent,
-  race_select: RaceSelectComponent<'a>,
-  class_select: ClassSelectComponent<'a>,
+  race_select: RaceSelectComponent,
+  class_select: ClassSelectComponent,
 }
 
-impl Default for CharacterGenComponent<'_> {
+impl Default for CharacterGenComponent {
     fn default() -> Self {
       CharacterGenComponent {
         point_buy: PointBuyComponent::default(),
@@ -20,7 +22,7 @@ impl Default for CharacterGenComponent<'_> {
     }
 }
 
-impl crate::Window for CharacterGenComponent<'_> {
+impl crate::Window for CharacterGenComponent {
     fn name(&self) -> &'static str {
         "New Character"
     }
@@ -34,14 +36,14 @@ impl crate::Window for CharacterGenComponent<'_> {
     }
 }
 
-impl<'a> crate::View for CharacterGenComponent<'a> {
+impl crate::View for CharacterGenComponent {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
           ref mut point_buy,
           ref mut race_select,
           ref mut class_select,
         } = self;
-        let db: &'a SystemData = &**crate::STORE.load();
+        let db: ArcSwap<Arc<SystemData>> = crate::STORE.load();
         ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {
 
           ui.button("<");
