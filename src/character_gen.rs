@@ -37,9 +37,9 @@ impl crate::Window for CharacterGenComponent<'_> {
 impl crate::View for CharacterGenComponent<'_> {
     fn ui(&mut self, ui: &mut egui::Ui) {
         let Self {
-          point_buy,
-          mut race_select,
-          mut class_select,
+          ref mut point_buy,
+          ref mut race_select,
+          ref mut class_select,
         } = self;
         let db: &SystemData = **crate::STORE.load();
         ui.with_layout(Layout::left_to_right(Align::TOP), |ui| {

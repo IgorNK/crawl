@@ -31,6 +31,7 @@ pub trait Window {
 
 lazy_static! {
   static ref STORE: ArcSwap<&'static SystemData> = {
-    ArcSwap::from(Arc::new(&mock_db::mock_db()))
+    let db = mock_db::mock_db();
+    ArcSwap::from(Arc::new(&db))
   };
 }

@@ -21,7 +21,7 @@ impl crate::View for RaceSelectComponent<'_> {
       
             ui.label("Race: ");
             if let Some(db) = db {
-              if let Some(races) = db.races {
+              if let Some(races) = &db.races {
                 let _: Vec<_> = races.iter().map(|race| {
                   ui.button(&race.name);
                 }).collect();
