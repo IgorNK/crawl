@@ -49,17 +49,17 @@ impl crate::View for CharacterGenComponent {
             egui::ScrollArea::vertical()
                 .id_source("race_select")
                 .show(&mut columns[0], |ui| {
-                    race_select.with_db(&*db).ui(ui);
+                    race_select.with_db(&*db).ui(ui, ctx);
                 });
             egui::ScrollArea::vertical()
                 .id_source("point_buy")
                 .show(&mut columns[1], |ui| {
-                    point_buy.ui(ui);
+                    point_buy.ui(ui, ctx);
                 });
             egui::ScrollArea::vertical()
                 .id_source("class_select")
                 .show(&mut columns[2], |ui| {
-                    class_select.with_db(&*db).ui(ui);
+                    class_select.with_db(&*db).ui(ui, ctx);
                 })
         });
     }

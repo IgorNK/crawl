@@ -36,36 +36,41 @@ impl crate::View for ChatComponent {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.label("URL: ");
-            if ui.text_edit_singleline(&mut url).lost_focus()
+            if ui.text_edit_singleline(url).lost_focus()
               && ui.input(|i| i.key_pressed(egui::Key::Enter))
             {
-              self.connect(ctx.clone())
+              self.connect(ctx);
             }
           
             ui.separator();
-          
-            ui.horizontal(|ui| {
-              ui.label("Message to send:");
-              if ui.text_edit_singleline(&mut text_to_send).lost_focus()
-                && ui.input(|i| i.key_pressed(egui::Key::Enter))
-              {
-                sender.send(WsMessage::Text(std::mem::take(text_to_send)))
+
+            if let Some(sender) = sender {
+              if let Some(receiver) = receiver {
+                  ui.horizontal(|ui| {
+                  ui.label("Message to send:");
+                  if ui.text_edit_singleline(text_to_send).lost_focus()
+                    && ui.input(|i| i.key_pressed(egui::Key::Enter))
+                  {
+                    sender.send(WsMessage::Text(std::mem::take(text_to_send)));
+                  }
+                  });
+      
+                  ui.separator();
+      
+                  ui.heading("Received events:");
+                  for event in events {
+                    ui.label(format!("{:?}", event));
+                  }
               }
-            });
-
-            ui.separator();
-
-            ui.heading("Received events:");
-            for event in events {
-              ui.label(format!("{:?}", event));
-            }
+              
+          }          
         });
 
         if !error.is_empty() {
           egui::TopBottomPanel::bottom("error").show(ctx, |ui| {
             ui.horizontal(|ui| {
               ui.label("Error:");
-              ui.colored_label(egui::Color32::Red, &error);
+              ui.colored_label(egui::Color32::RED, error);
             });
           });
         }
@@ -82,8 +87,8 @@ impl ChatComponent {
         self.error.clear();
       }
       Err(e) => {
-        log::error!("Failed to connect to {:?}: {}", &self.url, error);
-        self.error = error;
+        log::error!("Failed to connect to {:?}: {}", &self.url, e);
+        self.error = e;
       }
     }
   }

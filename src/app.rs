@@ -2,6 +2,7 @@ use crate::api::{self, ResponseData};
 use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
 use crate::chat_component::ChatComponent;
+use crate::View;
 use std::sync::mpsc::{self, Receiver, Sender};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
