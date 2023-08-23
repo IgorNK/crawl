@@ -30,9 +30,12 @@ impl crate::View for ChatComponent {
     fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
         let Self { ref mut url, ref mut error, ref sender, ref receiver, ref mut events, ref mut text_to_send } = self;
 
+      if let Some (receiver) = receiver {
         while let Some(event) = receiver.try_recv() {
           events.push(event);
         }
+      }
+        
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.label("URL: ");
