@@ -29,7 +29,7 @@ impl Default for ChatComponent {
 impl crate::View for ChatComponent {
     fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
 
-      if let Some (receiver) = self.receiver {
+      if let Some (receiver) = &self.receiver {
         while let Some(event) = receiver.try_recv() {
           self.events.push(event);
         }
@@ -46,8 +46,8 @@ impl crate::View for ChatComponent {
           
             ui.separator();
 
-            if let Some(sender) = self.sender {
-              if let Some(receiver) = self.receiver {
+            if let Some(mut sender) = &self.sender {
+              if let Some(receiver) = &self.receiver {
                   ui.horizontal(|ui| {
                   ui.label("Message to send:");
                   if ui.text_edit_singleline(&mut self.text_to_send).lost_focus()
