@@ -46,7 +46,7 @@ impl crate::View for ChatComponent {
           
             ui.separator();
 
-            if let Some(ref mut sender) = &self.sender {
+            if let Some(ref mut sender) = &mut self.sender {
               if let Some(receiver) = &self.receiver {
                   ui.horizontal(|ui| {
                   ui.label("Message to send:");
