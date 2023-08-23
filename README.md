@@ -74,3 +74,20 @@ You can test the template app at <https://emilk.github.io/eframe_template/>.
 As of 2023, egui is in active development with frequent releases with breaking changes. [eframe_template](https://github.com/emilk/eframe_template/) will be updated in lock-step to always use the latest version of egui.
 
 When updating `egui` and `eframe` it is recommended you do so one version at the time, and read about the changes in [the egui changelog](https://github.com/emilk/egui/blob/master/CHANGELOG.md) and [eframe changelog](https://github.com/emilk/egui/blob/master/crates/eframe/CHANGELOG.md).
+
+Manual layout:
+Ui::put
+
+Dragging stuff:
+see drag&drop example on egui.rs
+
+Image loading:
+ColorImage::from_rgba_unmultiplied
+egui::ImageData
+egui::Context::load_texture
+egui::widgets::Image
+OR
+egui::Mesh
+
+Background image:
+egui::widgets::plot::PlotImage
