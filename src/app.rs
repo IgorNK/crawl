@@ -1,6 +1,7 @@
 use crate::api::{self, ResponseData};
 use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
+use crate::chat_component::ChatComponent;
 use std::sync::mpsc::{self, Receiver, Sender};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
@@ -9,6 +10,9 @@ use std::sync::mpsc::{self, Receiver, Sender};
 pub struct TemplateApp {
     #[serde(skip)]
     windows: Windows,
+
+    #[serde(skip)]
+    chat: ChatComponent,
 
     #[serde(skip)]
     tx: Sender<ResponseData>,
@@ -22,6 +26,7 @@ impl Default for TemplateApp {
 
         Self {
             windows: Windows::default(),
+            chat: ChatComponent::default(),
             tx,
             rx,
         }
@@ -55,7 +60,7 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self { windows, tx, rx } = self;
+        let Self { windows, chat, tx, rx } = self;
 
         if let Ok(result) = rx.try_recv() {
             match result {
@@ -107,6 +112,7 @@ impl eframe::App for TemplateApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             windows.windows(ctx);
+            chat.ui(ui, ctx);
             egui::warn_if_debug_build(ui);
         });
 

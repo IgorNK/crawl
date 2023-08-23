@@ -32,12 +32,12 @@ impl crate::Window for CharacterGenComponent {
         egui::Window::new(self.name())
             .open(open)
             .default_height(500.0)
-            .show(ctx, |ui| self.ui(ui));
+            .show(ctx, |ui| self.ui(ui, ctx));
     }
 }
 
 impl crate::View for CharacterGenComponent {
-    fn ui(&mut self, ui: &mut egui::Ui) {
+    fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
         let Self {
             ref mut point_buy,
             ref mut race_select,

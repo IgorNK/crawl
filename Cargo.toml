@@ -23,6 +23,7 @@ chrono = { version = "0.4.26", features = ["serde"] }
 thiserror = "1.0.45"
 lazy_static = "1.4.0"
 arc-swap = "1.6.0"
+ewebsock = { version = "0.2.0", features = ["tls"] }
 
 # native:
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]

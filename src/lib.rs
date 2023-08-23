@@ -9,6 +9,7 @@ use std::sync::Arc;
 mod api;
 mod app;
 mod character_gen;
+mod chat_component;
 mod classselect_component;
 mod mock_db;
 mod model;
@@ -19,7 +20,7 @@ mod window_manager;
 pub use app::TemplateApp;
 
 pub trait View {
-    fn ui(&mut self, ui: &mut egui::Ui);
+    fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context);
 }
 
 pub trait Window {

@@ -14,7 +14,7 @@ impl Default for ClassSelectComponent {
 }
 
 impl crate::View for ClassSelectComponent {
-    fn ui(&mut self, ui: &mut egui::Ui) {
+    fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
         let Self { db } = self;
 
         egui::Frame::none().show(ui, |ui| {

@@ -18,7 +18,7 @@ impl Default for PointBuyComponent {
 }
 
 impl crate::View for PointBuyComponent {
-    fn ui(&mut self, ui: &mut egui::Ui) {
+    fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
         let Self {
             ref mut attr,
             ref mut attr_add,
