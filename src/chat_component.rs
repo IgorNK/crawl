@@ -28,40 +28,39 @@ impl Default for ChatComponent {
 
 impl crate::View for ChatComponent {
     fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
-        let Self { ref mut url, ref mut error, ref sender, ref receiver, ref mut events, ref mut text_to_send } = self;
 
-      if let Some (receiver) = receiver {
+      if let Some (receiver) = self.receiver {
         while let Some(event) = receiver.try_recv() {
-          events.push(event);
+          self.events.push(event);
         }
       }
         
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.label("URL: ");
-            if ui.text_edit_singleline(url).lost_focus()
+            if ui.text_edit_singleline(&mut self.url).lost_focus()
               && ui.input(|i| i.key_pressed(egui::Key::Enter))
             {
-              self.connect(ctx);
+              self.connect(ctx.clone());
             }
           
             ui.separator();
 
-            if let Some(sender) = sender {
-              if let Some(receiver) = receiver {
+            if let Some(sender) = self.sender {
+              if let Some(receiver) = self.receiver {
                   ui.horizontal(|ui| {
                   ui.label("Message to send:");
-                  if ui.text_edit_singleline(text_to_send).lost_focus()
+                  if ui.text_edit_singleline(&mut self.text_to_send).lost_focus()
                     && ui.input(|i| i.key_pressed(egui::Key::Enter))
                   {
-                    sender.send(WsMessage::Text(std::mem::take(text_to_send)));
+                    sender.send(WsMessage::Text(std::mem::take(&mut self.text_to_send)));
                   }
                   });
       
                   ui.separator();
       
                   ui.heading("Received events:");
-                  for event in events {
+                  for event in &self.events {
                     ui.label(format!("{:?}", event));
                   }
               }
@@ -69,11 +68,11 @@ impl crate::View for ChatComponent {
           }          
         });
 
-        if !error.is_empty() {
+        if !self.error.is_empty() {
           egui::TopBottomPanel::bottom("error").show(ctx, |ui| {
             ui.horizontal(|ui| {
               ui.label("Error:");
-              ui.colored_label(egui::Color32::RED, error);
+              ui.colored_label(egui::Color32::RED, &self.error);
             });
           });
         }
@@ -81,7 +80,7 @@ impl crate::View for ChatComponent {
 }
 
 impl ChatComponent {
-  fn connect(&mut self, ctx: &egui::Context) {
+  fn connect(&mut self, ctx: egui::Context) {
     let wakeup = move || ctx.request_repaint();
     match ewebsock::connect_with_wakeup(&self.url, wakeup) {
       Ok((ws_sender, ws_receiver)) => {
