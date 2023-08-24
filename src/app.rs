@@ -118,8 +118,11 @@ impl eframe::App for TemplateApp {
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            windows.windows(ctx);
-            drag.ui(ui, ctx);
+            egui::ScrollArea::both().drag_to_scroll(true).show(ui, |ui| {
+              windows.windows(ctx);
+              drag.ui(ui, ctx);
+            });
+            
             // let mut items = vec!["alfred", "bernard", "christian"];
             // dnd(ui, "dnd_example").show_vec(&mut items, |ui, item, handle, state| {
             //   ui.horizontal(|ui| {
