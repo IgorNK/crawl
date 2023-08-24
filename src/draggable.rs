@@ -41,6 +41,17 @@ impl Draggable {
 
 impl crate::View for Draggable {
     fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {        
-        ui.put(self.rect().clone(), egui::widgets::Label::new(self.name()));
+      let is_being_dragged = ui.memory(|mem| mem.is_being_dragged(self.id.clone()));
+
+      if !is_being_dragged {
+        let response = ui.interact(self.rect.clone(), self.id.clone(), egui::Sense::drag());
+        if response.hovered() {
+          ui.ctx().set_cursor_icon(egui::CursorIcon::Grab);
+        }
+      } else {
+        ui.ctx().set_cursor_icon(egui::CursorIcon::Grabbing);
+      }
+      
+      ui.put(self.rect().clone(), egui::widgets::Label::new(self.name()));
     }
 }
