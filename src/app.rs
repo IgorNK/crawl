@@ -1,5 +1,6 @@
 use crate::api::{self, ResponseData};
 use crate::chat_component::ChatComponent;
+use crate::draggable::Draggable;
 use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
 use crate::View;
@@ -13,6 +14,9 @@ pub struct TemplateApp {
     #[serde(skip)]
     windows: Windows,
 
+  #[serde(skip)]
+  drag: Draggable,
+
     #[serde(skip)]
     tx: Sender<ResponseData>,
     #[serde(skip)]
@@ -25,6 +29,7 @@ impl Default for TemplateApp {
 
         Self {
             windows: Windows::default(),
+          drag: Draggable::new("0__0"),
             tx,
             rx,
         }
@@ -58,7 +63,7 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self { windows, tx, rx } = self;
+        let Self { windows, drag tx, rx } = self;
 
         if let Ok(result) = rx.try_recv() {
             match result {
@@ -114,19 +119,20 @@ impl eframe::App for TemplateApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             windows.windows(ctx);
-            let mut items = vec!["alfred", "bernard", "christian"];
-            dnd(ui, "dnd_example").show_vec(&mut items, |ui, item, handle, state| {
-              ui.horizontal(|ui| {
-                handle.ui(ui, |ui| {
-                  if state.dragged {
-                    ui.label("dragging");
-                  } else {
-                    ui.label("drag");
-                  }
-                });
-                ui.label(*item);
-              });
-            });
+            drag.ui(ui, ctx);
+            // let mut items = vec!["alfred", "bernard", "christian"];
+            // dnd(ui, "dnd_example").show_vec(&mut items, |ui, item, handle, state| {
+            //   ui.horizontal(|ui| {
+            //     handle.ui(ui, |ui| {
+            //       if state.dragged {
+            //         ui.label("dragging");
+            //       } else {
+            //         ui.label("drag");
+            //       }
+            //     });
+            //     ui.label(*item);
+            //   });
+            // });
             
             egui::warn_if_debug_build(ui);
         });

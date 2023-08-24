@@ -11,6 +11,7 @@ mod app;
 mod character_gen;
 mod chat_component;
 mod classselect_component;
+mod draggable;
 mod mock_db;
 mod model;
 mod pointbuy_component;
