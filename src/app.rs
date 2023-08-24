@@ -1,11 +1,12 @@
 use crate::api::{self, ResponseData};
 use crate::chat_component::ChatComponent;
 use crate::draggable::Draggable;
+use crate::playgrid_component::PlayGridComponent;
 use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
 use crate::View;
-use std::sync::mpsc::{self, Receiver, Sender};
 use egui_dnd::dnd;
+use std::sync::mpsc::{self, Receiver, Sender};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -14,8 +15,10 @@ pub struct TemplateApp {
     #[serde(skip)]
     windows: Windows,
 
-  #[serde(skip)]
-  drag: Draggable,
+    #[serde(skip)]
+    drag: Draggable,
+    #[serde(skip)]
+    playgrid: PlayGridComponent,
 
     #[serde(skip)]
     tx: Sender<ResponseData>,
@@ -29,7 +32,8 @@ impl Default for TemplateApp {
 
         Self {
             windows: Windows::default(),
-          drag: Draggable::new("0__0"),
+            drag: Draggable::new("0__0"),
+            playgrid: PlayGridComponent::new(egui::Vec2::splat(2048f32)),
             tx,
             rx,
         }
@@ -63,7 +67,13 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self { windows, drag, tx, rx } = self;
+        let Self {
+            windows,
+            drag,
+            playgrid,
+            tx,
+            rx,
+        } = self;
 
         if let Ok(result) = rx.try_recv() {
             match result {
@@ -118,11 +128,14 @@ impl eframe::App for TemplateApp {
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            egui::ScrollArea::both().drag_to_scroll(true).show(ui, |ui| {
-              windows.windows(ctx);
-              drag.ui(ui, ctx);
-            });
-            
+            egui::ScrollArea::both()
+                .drag_to_scroll(true)
+                .show(ui, |ui| {
+                    windows.windows(ctx);
+                    playgrid.ui(ui, ctx);
+                    // drag.ui(ui, ctx);
+                });
+
             // let mut items = vec!["alfred", "bernard", "christian"];
             // dnd(ui, "dnd_example").show_vec(&mut items, |ui, item, handle, state| {
             //   ui.horizontal(|ui| {
@@ -136,7 +149,7 @@ impl eframe::App for TemplateApp {
             //     ui.label(*item);
             //   });
             // });
-            
+
             egui::warn_if_debug_build(ui);
         });
 

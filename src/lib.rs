@@ -14,6 +14,7 @@ mod classselect_component;
 mod draggable;
 mod mock_db;
 mod model;
+mod playgrid_component;
 mod pointbuy_component;
 mod raceselect_component;
 mod todos;
