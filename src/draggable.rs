@@ -11,7 +11,10 @@ impl Draggable {
     Self { 
       name: name.to_string(),
       id: egui::Id::new(name),
-      rect: Default::default(),
+      rect: egui::Rect::from_min_size(
+        egui::Pos2{ x: 50f32, y: 50f32 },
+        egui::Vec2 { x: 50f32, y: 50f32 }
+      ),
     }
   }
 
