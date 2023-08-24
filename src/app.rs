@@ -63,7 +63,7 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self { windows, drag tx, rx } = self;
+        let Self { windows, drag, tx, rx } = self;
 
         if let Ok(result) = rx.try_recv() {
             match result {

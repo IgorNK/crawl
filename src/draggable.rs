@@ -7,10 +7,12 @@ pub struct Draggable {
 }
 
 impl Draggable {
-  pub fn new(name: &str) {
-    name: name.to_string(),
-    id: egui::Id::new(name),
-    rect: Default::default(),
+  pub fn new(name: &str) -> Self {
+    Self { 
+      name: name.to_string(),
+      id: egui::Id::new(name),
+      rect: Default::default(),
+    }
   }
 
   pub fn name(&self) -> &String {
