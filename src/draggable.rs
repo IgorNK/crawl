@@ -50,6 +50,10 @@ impl crate::View for Draggable {
         }
       } else {
         ui.ctx().set_cursor_icon(egui::CursorIcon::Grabbing);
+
+        if let Some(pointer_pos) = ui.ctx().pointer_interact_pos() {
+          self.set_center(pointer_pos);
+        }
       }
       
       ui.put(self.rect().clone(), egui::widgets::Label::new(self.name()));
