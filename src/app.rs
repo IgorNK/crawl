@@ -4,6 +4,7 @@ use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
 use crate::View;
 use std::sync::mpsc::{self, Receiver, Sender};
+use egui_dnd::dnd;
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -113,6 +114,20 @@ impl eframe::App for TemplateApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             windows.windows(ctx);
+            let mut items = vec!["alfred", "bernard", "christian"];
+            dnd(ui, "dnd_example").show_vec(&mut items, |ui, item, handle, state| {
+              ui.horizontal(|ui| {
+                handle.ui(ui, |ui| {
+                  if state.dragged {
+                    ui.label("dragging");
+                  } else {
+                    ui.label("drag");
+                  }
+                });
+                ui.label(*item);
+              });
+            });
+            
             egui::warn_if_debug_build(ui);
         });
 
