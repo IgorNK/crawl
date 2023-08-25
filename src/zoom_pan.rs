@@ -80,34 +80,34 @@ impl ZoomPanState {
     //}
     self.pan = pan;
     self.zoom = zoom;
-  }
-
-  pub fn show_zoomed<R, F>(&self, ui: &mut egui::Ui, add_content: F) -> R
-  where
-    F: FnOnce(&mut egui::Ui) -> R,
-  {
-    let original_cliprect = ui.clip_rect();
-    ui.set_clip_rect(self.screen_rect);
-    ui.ctx().set_style(self.zoomed_style.clone());
-    let response = add_content(ui);
-    ui.ctx().set_style(self.default_style.clone());
-    ui.set_clip_rect(original_cliprect);
-
-    response
-  }
-
-  pub fn show_clipped<R, F>(&self, ui: &mut egui::Ui, add_content: F) -> R
-  where
-    F: FnOnce(&mut egui::Ui) -> R,
-  {
-    let original_cliprect = ui.clip_rect();
-    ui.set_clip_rect(self.screen_rect);
-    let response = add_content(ui);
-    ui.set_clip_rect(original_cliprect);
-
-    response
-  }
+  }  
 }
+
+pub fn show_zoomed<R, F>(ui: &mut egui::Ui, screen_rect: egui::Rect, zoomed_style: Arc<egui::Style>, default_style: Arc<egui::Style>, add_content: F) -> R
+  where
+    F: FnOnce(&mut egui::Ui) -> R,
+  {
+    let original_cliprect = ui.clip_rect();
+    ui.set_clip_rect(screen_rect);
+    ui.ctx().set_style(zoomed_style);
+    let response = add_content(ui);
+    ui.ctx().set_style(default_style);
+    ui.set_clip_rect(original_cliprect);
+
+    response
+  }
+
+  pub fn show_clipped<R, F>(ui: &mut egui::Ui, screen_rect: egui::Rect, add_content: F) -> R
+  where
+    F: FnOnce(&mut egui::Ui) -> R,
+  {
+    let original_cliprect = ui.clip_rect();
+    ui.set_clip_rect(screen_rect);
+    let response = add_content(ui);
+    ui.set_clip_rect(original_cliprect);
+
+    response
+  }
 
 pub trait ZoomPan: View {
   fn zoom_pan_state(&mut self) -> &mut ZoomPanState;
@@ -132,7 +132,9 @@ pub trait ZoomPan: View {
       }
     }
 
-    self.zoom_pan_state().show_zoomed(ui, |ui| {
+    let content = self.ui(ui, ctx);
+
+    show_zoomed(ui, self.screen_rect.clone(), self.zoomed_style.clone(), self.default_style.clone(), |ui| {
       self.ui(ui, ctx);
     });
   
