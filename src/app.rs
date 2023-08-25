@@ -132,7 +132,7 @@ impl eframe::App for TemplateApp {
             egui::ScrollArea::both()
                 .drag_to_scroll(false)
                 .show(ui, |ui| {
-                    windows.indows(ctx);
+                    windows.windows(ctx);
                     playgrid.ui_with_zoom_pan(ui, ctx);
                     // drag.ui(ui, ctx);
                 });

@@ -1,6 +1,7 @@
 // Courtesy of gzp79 @ https://github.com/gzp79/shine/tree/main
 
 use eframe::egui;
+use std::sync::Arc;
 use crate::View;
 
 #[derive(Clone)]
@@ -9,8 +10,8 @@ pub struct ZoomPanState {
   pub pan: egui::Vec2,
   pub zoom: f32,
   pub screen_rect: egui::Rect,
-  pub default_style: Arc<Style>,
-  pub zoomed_style: Arc<Style>,
+  pub default_style: Arc<egui::Style>,
+  pub zoomed_style: Arc<egui::Style>,
 }
 
 impl ZoomPanState {
@@ -20,12 +21,12 @@ impl ZoomPanState {
       pan: egui::Vec2::ZERO,
       zoom: 1f32,
       screen_rect: egui::Rect::NOTHING,
-      default_style: ui.style().clone(),
-      zoomed_style: ui.style().clone(),
+      default_style: Default::default(),
+      zoomed_style: Default::default(),
     }
   }
 
-  pub fn pos2_are_to_screen(&self, p: egui::Pos2) -> egui::Pos2 {
+  pub fn pos2_area_to_screen(&self, p: egui::Pos2) -> egui::Pos2 {
     let egui::Pos2 { x, y } = p;
     let x = x + self.screen_rect.left();
     let y = y + self.screen_rect.top();
@@ -57,28 +58,28 @@ impl ZoomPanState {
 
     let test = self.pos2_screen_to_area(screen_pos);
 
-    let Pos2 { x, y } = screen_pos;
+    let egui::Pos2 { x, y } = screen_pos;
     let new_pan = egui::vec2(
       x / new_zoom - x / self.zoom + self.pan.x,
       y / new_zoom - y / self.zoom + self.pan.y,
     );
 
-    let err = self.pos2_area_to_screen(test) - self_pos;
+    let err = self.pos2_area_to_screen(test) - screen_pos;
     assert!(err.x < 1f32);
     assert!(err.y < 1f32);
     self.update(new_pan, new_zoom);
   }
 
-  pub fn prepare(&mut self, style: &Arc<Style>) {
+  pub fn prepare(&mut self, style: &Arc<egui::Style>) {
     self.default_style = style.clone();
   }
 
-  pub fn update(&mut self, pan: Vec2, zoom: f32) {
+  pub fn update(&mut self, pan: egui::Vec2, zoom: f32) {
     if self.zoom != zoom {
       self.zoomed_style = Arc::new(self.default_style.scaled(self.zoom));
     }
     self.pan = pan;
-    self.zoom = zom;
+    self.zoom = zoom;
   }
 
   pub fn show_zoomed<R, F>(&self, ui: &mut egui::Ui, add_content: F) -> R
@@ -110,20 +111,20 @@ impl ZoomPanState {
 
 pub trait ZoomPan: View {
   fn zoom_pan_state(&mut self) -> &mut ZoomPanState;
-  fn id(&self) -> egui::Id;
+  fn id(&self) -> &egui::Id;
   
   fn ui_with_zoom_pan(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
     self.zoom_pan_state().prepare(ui.style());
     self.zoom_pan_state().screen_rect = ui.available_rect_before_wrap();
 
-    let mut response = ui.interact(self.zoom_pan_state().screen_rect, self.id(), Sense::drag());
+    let mut response = ui.interact(self.zoom_pan_state().screen_rect, self.id(), egui::Sense::drag());
 
     // handle pan
     self.zoom_pan_state().drag(response.drag_delta());
 
     // handle zoom
     if let Some(pos) = ui.ctx().pointer_latest_pos() {
-      let zoom = ui.input().zcroll_delta.y;
+      let zoom = ui.input(|i| i.scroll_delta.y);
       if zoom != 0f32 && self.zoom_pan_state().screen_rect.contains(pos) {
         log::warn!("zooming to {}", zoom);
         let zoom = (zoom * 0.002f32).exp();

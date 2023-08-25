@@ -107,11 +107,11 @@ impl crate::View for PlayGridComponent {
 }
 
 impl ZoomPan for PlayGridComponent {
-  fn zoom_pan_state(&mut self) -> &ZoomPanState {
+  fn zoom_pan_state(&mut self) -> &mut ZoomPanState {
     &mut self.zoom_pan_state
   }
 
-  fn id(&self) -> egui::Id {
+  fn id(&self) -> &egui::Id {
     &self.id
   }
 }
