@@ -75,9 +75,9 @@ impl ZoomPanState {
   }
 
   pub fn update(&mut self, pan: egui::Vec2, zoom: f32) {
-    if self.zoom != zoom {
-      self.zoomed_style = Arc::new(self.default_style.scaled(self.zoom));
-    }
+    //if self.zoom != zoom {
+    //  self.zoomed_style = Arc::new(self.default_style.scaled(self.zoom));
+    //}
     self.pan = pan;
     self.zoom = zoom;
   }
@@ -117,7 +117,7 @@ pub trait ZoomPan: View {
     self.zoom_pan_state().prepare(ui.style());
     self.zoom_pan_state().screen_rect = ui.available_rect_before_wrap();
 
-    let mut response = ui.interact(self.zoom_pan_state().screen_rect, self.id(), egui::Sense::drag());
+    let mut response = ui.interact(self.zoom_pan_state().screen_rect, self.id().clone(), egui::Sense::drag());
 
     // handle pan
     self.zoom_pan_state().drag(response.drag_delta());
