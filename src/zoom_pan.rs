@@ -134,7 +134,7 @@ pub trait ZoomPan: View {
 
     let content = self.ui(ui, ctx);
 
-    show_zoomed(ui, self.screen_rect.clone(), self.zoomed_style.clone(), self.default_style.clone(), |ui| {
+    show_zoomed(ui, self.zoom_pan_state().screen_rect.clone(), self.zoom_pan_state().zoomed_style.clone(), self.zoom_pan_state().default_style.clone(), |ui| {
       self.ui(ui, ctx);
     });
   
