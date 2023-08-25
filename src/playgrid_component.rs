@@ -97,11 +97,11 @@ impl PlayGridComponent {
 impl crate::View for PlayGridComponent {
     fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
         egui::Frame::none().fill(egui::Color32::RED).show(ui, |ui| {
-            let (id, rect) = ui.allocate_space(egui::vec2(2048.0, 2048.0));
-            for cell in &mut self.cells {
-                cell.ui(ui, ctx);
-                cell.set_offset(rect.min.to_vec2());
-            }
+            // let (id, rect) = ui.allocate_space(egui::vec2(2048.0, 2048.0));
+            // for cell in &mut self.cells {
+            //     cell.ui(ui, ctx);
+            //     cell.set_offset(rect.min.to_vec2());
+            // }
         });
     }
 }

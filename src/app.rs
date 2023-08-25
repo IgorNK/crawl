@@ -34,7 +34,7 @@ impl Default for TemplateApp {
         Self {
             windows: Windows::default(),
             drag: Draggable::new("0__0"),
-            playgrid: PlayGridComponent::new(egui::Vec2::splat(2048f32)),
+            playgrid: PlayGridComponent::new(egui::Vec2::splat(512f32)),
             tx,
             rx,
         }
