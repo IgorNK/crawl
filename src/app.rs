@@ -5,6 +5,7 @@ use crate::playgrid_component::PlayGridComponent;
 use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
 use crate::View;
+use crate::zoom_pan::{ZoomPan};
 use egui_dnd::dnd;
 use std::sync::mpsc::{self, Receiver, Sender};
 
@@ -129,10 +130,10 @@ impl eframe::App for TemplateApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             egui::ScrollArea::both()
-                .drag_to_scroll(true)
+                .drag_to_scroll(false)
                 .show(ui, |ui| {
-                    windows.windows(ctx);
-                    playgrid.ui(ui, ctx);
+                    windows.indows(ctx);
+                    playgrid.ui_with_zoom_pan(ui, ctx);
                     // drag.ui(ui, ctx);
                 });
 

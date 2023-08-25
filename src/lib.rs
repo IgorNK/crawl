@@ -19,6 +19,7 @@ mod pointbuy_component;
 mod raceselect_component;
 mod todos;
 mod window_manager;
+mod zoom_pan;
 pub use app::TemplateApp;
 
 pub trait View {
