@@ -1,11 +1,11 @@
 use crate::api::{self, ResponseData};
 use crate::chat_component::ChatComponent;
 use crate::draggable::Draggable;
-use crate::playgrid_component::PlayGridComponent;
+use crate::node::Node;
 use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
+use crate::zoom_pan_container::ZoomPanContainer;
 use crate::View;
-use crate::zoom_pan::{ZoomPan};
 use egui_dnd::dnd;
 use std::sync::mpsc::{self, Receiver, Sender};
 
@@ -18,9 +18,10 @@ pub struct TemplateApp {
 
     #[serde(skip)]
     drag: Draggable,
+    // #[serde(skip)]
+    // playgrid: PlayGridComponent,
     #[serde(skip)]
-    playgrid: PlayGridComponent,
-
+    zoom_container: ZoomPanContainer,
     #[serde(skip)]
     tx: Sender<ResponseData>,
     #[serde(skip)]
@@ -30,11 +31,14 @@ pub struct TemplateApp {
 impl Default for TemplateApp {
     fn default() -> Self {
         let (tx, rx) = mpsc::channel();
+        let mut cont = ZoomPanContainer::new("container");
+        cont.add_node(Node::new("Node", egui::Pos2::ZERO));
 
         Self {
             windows: Windows::default(),
             drag: Draggable::new("0__0"),
-            playgrid: PlayGridComponent::new(egui::Vec2::splat(512f32)),
+            // playgrid: PlayGridComponent::new(egui::Vec2::splat(512f32)),
+            zoom_container: cont,
             tx,
             rx,
         }
@@ -71,7 +75,8 @@ impl eframe::App for TemplateApp {
         let Self {
             windows,
             drag,
-            playgrid,
+            // playgrid,
+            zoom_container,
             tx,
             rx,
         } = self;
@@ -129,13 +134,16 @@ impl eframe::App for TemplateApp {
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            egui::ScrollArea::both()
-                .drag_to_scroll(false)
-                .show(ui, |ui| {
-                    windows.windows(ctx);
-                    playgrid.ui_with_zoom_pan(ui, ctx);
-                    // drag.ui(ui, ctx);
-                });
+            windows.windows(ctx);
+            zoom_container.show(ui);
+
+            // egui::ScrollArea::both()
+            //     .drag_to_scroll(false)
+            //     .show(ui, |ui| {
+            // windows.windows(ctx);
+            // playgrid.ui_with_zoom_pan(ui, ctx);
+            // drag.ui(ui, ctx);
+            // });
 
             // let mut items = vec!["alfred", "bernard", "christian"];
             // dnd(ui, "dnd_example").show_vec(&mut items, |ui, item, handle, state| {

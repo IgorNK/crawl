@@ -14,12 +14,13 @@ mod classselect_component;
 mod draggable;
 mod mock_db;
 mod model;
-mod playgrid_component;
+mod node;
 mod pointbuy_component;
 mod raceselect_component;
 mod todos;
 mod window_manager;
 mod zoom_pan;
+mod zoom_pan_container;
 pub use app::TemplateApp;
 
 pub trait View {
