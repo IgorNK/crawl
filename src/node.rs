@@ -25,7 +25,7 @@ impl Node {
             id: egui::Id::new(caption),
             caption: caption.to_string(),
             location,
-            data: Box::new(NodeData { caption: caption.to_string }),
+            data: Box::new(NodeData { caption: caption.to_string() }),
         }
     }
 
