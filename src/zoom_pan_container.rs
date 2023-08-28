@@ -42,7 +42,11 @@ impl ZoomPanContainer {
         );
 
         zoom_pan_state.show_zoomed(ui, |ui| self.show_nodes(ui, &zoom_pan_state));
+        // Handle pan
 
+        zoom_pan_state.drag(response.drag_delta());
+      
+        // Handle zoom
         if let Some(pos) = ui.ctx().pointer_latest_pos() {
             let zoom = ui.input(|i| i.scroll_delta.y);
             if zoom != 0. && zoom_pan_state.screen_rect.contains(pos) {

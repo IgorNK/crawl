@@ -1,6 +1,6 @@
 use crate::api::{self, ResponseData};
 use crate::chat_component::ChatComponent;
-use crate::draggable::Draggable;
+// use crate::draggable::Draggable;
 use crate::node::Node;
 use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
@@ -16,8 +16,8 @@ pub struct TemplateApp {
     #[serde(skip)]
     windows: Windows,
 
-    #[serde(skip)]
-    drag: Draggable,
+    // #[serde(skip)]
+    // drag: Draggable,
     // #[serde(skip)]
     // playgrid: PlayGridComponent,
     #[serde(skip)]
@@ -33,10 +33,11 @@ impl Default for TemplateApp {
         let (tx, rx) = mpsc::channel();
         let mut cont = ZoomPanContainer::new("container");
         cont.add_node(Node::new("Node", egui::Pos2::ZERO));
+        cont.add_node(Node::new("Node 2", egui::Pos2::ZERO));
 
         Self {
             windows: Windows::default(),
-            drag: Draggable::new("0__0"),
+            // drag: Draggable::new("0__0"),
             // playgrid: PlayGridComponent::new(egui::Vec2::splat(512f32)),
             zoom_container: cont,
             tx,
@@ -74,7 +75,7 @@ impl eframe::App for TemplateApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         let Self {
             windows,
-            drag,
+            // drag,
             // playgrid,
             zoom_container,
             tx,

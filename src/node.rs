@@ -1,11 +1,15 @@
 use crate::zoom_pan::ZoomPanState;
 use eframe::egui;
 
-pub struct NodeData {}
+pub struct NodeData {
+  caption: String,
+}
 
 impl NodeData {
     fn set_location(&mut self, _new_location: egui::Pos2) {}
-    fn show(&mut self, _ui: &mut egui::Ui) {}
+    fn show(&mut self, ui: &mut egui::Ui) {
+      ui.label(&self.caption);
+    }
 }
 
 pub struct Node {
@@ -21,7 +25,7 @@ impl Node {
             id: egui::Id::new(caption),
             caption: caption.to_string(),
             location,
-            data: Box::new(NodeData {}),
+            data: Box::new(NodeData { caption: caption.to_string }),
         }
     }
 
@@ -41,7 +45,7 @@ impl Node {
 
                 egui::Frame::window(ui.style())
                     .shadow(egui::epaint::Shadow::default())
-                    .inner_margin(50.0f32)
+                    .inner_margin(25.0f32)
                     .show(ui, |ui| {
                         self.data.show(ui);
                     });
