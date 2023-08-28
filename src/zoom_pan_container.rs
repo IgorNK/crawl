@@ -1,6 +1,11 @@
 use std::collections::HashMap;
 
-use crate::{node::Node, zoom_pan::ZoomPanState};
+use crate::utils::{load_image_from_bytes, load_image_from_path};
+use crate::{
+    node::{Node, NodeData},
+    node_image::NodeImageData,
+    zoom_pan::ZoomPanState,
+};
 use eframe::egui;
 
 pub struct ZoomPanContainer {
@@ -45,7 +50,7 @@ impl ZoomPanContainer {
         // Handle pan
 
         zoom_pan_state.drag(response.drag_delta());
-      
+
         // Handle zoom
         if let Some(pos) = ui.ctx().pointer_latest_pos() {
             let zoom = ui.input(|i| i.scroll_delta.y);
@@ -56,6 +61,8 @@ impl ZoomPanContainer {
         }
 
         zoom_pan_state.store(ui, self.id);
+
+        self.detect_files_being_dropped(ui);
     }
 
     pub fn add_node(&mut self, node: Node) -> egui::Id {
@@ -86,5 +93,28 @@ impl ZoomPanContainer {
 
     pub fn node_mut(&mut self, node_id: egui::Id) -> Option<&mut Node> {
         self.nodes.get_mut(&node_id)
+    }
+
+    fn detect_files_being_dropped(&mut self, ui: &mut egui::Ui) {
+        let dropped_files = ui.ctx().input(|i| i.raw.dropped_files.clone());
+        if !dropped_files.is_empty() {
+            for file in dropped_files {
+                dbg!(&file);
+                if let Some(path) = &file.path {
+                    if let Ok(image) = load_image_from_path(path) {
+                        let texture = ui.ctx().load_texture("tex", image, Default::default());
+                        let node_data = NodeImageData {
+                            texture: Some(texture),
+                        };
+                        let node = Node::new("Image node", egui::Pos2::ZERO).with_data(node_data);
+                        self.add_node(node);
+                    }
+                }
+                // if let Some(bytes) = &file.bytes {
+                //     if let Ok(image) = load_image_from_bytes(bytes.clone()) {
+                //     }
+                // }
+            }
+        }
     }
 }

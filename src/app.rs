@@ -1,13 +1,25 @@
 use crate::api::{self, ResponseData};
 use crate::chat_component::ChatComponent;
 // use crate::draggable::Draggable;
-use crate::node::Node;
+use crate::node::{Node, NodeData};
 use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
 use crate::zoom_pan_container::ZoomPanContainer;
 use crate::View;
 use egui_dnd::dnd;
 use std::sync::mpsc::{self, Receiver, Sender};
+
+struct NodeExample {
+    caption: String,
+}
+
+impl NodeData for NodeExample {
+    fn set_location(&mut self, _new_location: egui::Pos2) {}
+
+    fn show(&mut self, ui: &mut egui::Ui) {
+        ui.label(&self.caption);
+    }
+}
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -32,8 +44,16 @@ impl Default for TemplateApp {
     fn default() -> Self {
         let (tx, rx) = mpsc::channel();
         let mut cont = ZoomPanContainer::new("container");
-        cont.add_node(Node::new("Node", egui::Pos2::ZERO));
-        cont.add_node(Node::new("Node 2", egui::Pos2::ZERO));
+        let node_data_one = NodeExample {
+            caption: "NodeOne".to_string(),
+        };
+        let node_data_two = NodeExample {
+            caption: "NodeTwo".to_string(),
+        };
+        let node_one = Node::new("Node One", egui::Pos2::ZERO).with_data(node_data_one);
+        let node_two = Node::new("Node Two", egui::Pos2::ZERO).with_data(node_data_two);
+        cont.add_node(node_one);
+        cont.add_node(node_two);
 
         Self {
             windows: Windows::default(),

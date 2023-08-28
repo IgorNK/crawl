@@ -62,7 +62,7 @@ impl ZoomPanState {
 
     pub fn drag(&mut self, delta: egui::Vec2) {
         let delta = self.vec2_screen_to_area(delta);
-        dbg!(&delta);
+        // dbg!(&delta);
         self.update(self.pan + delta, self.zoom);
     }
 
@@ -76,7 +76,7 @@ impl ZoomPanState {
             x / new_zoom - x / self.zoom + self.pan.x,
             y / new_zoom - y / self.zoom + self.pan.y,
         );
-        dbg!(&new_zoom);
+        // dbg!(&new_zoom);
         let err = self.pos2_area_to_screen(test) - screen_pos;
         assert!(err.x < 1f32);
         assert!(err.y < 1f32);

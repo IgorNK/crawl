@@ -1,22 +1,32 @@
 use crate::zoom_pan::ZoomPanState;
+use downcast_rs::{impl_downcast, Downcast};
 use eframe::egui;
+use smallbox::{smallbox, space, SmallBox};
 
-pub struct NodeData {
-  caption: String,
-}
+// pub struct NodeData {
+//   caption: String,
+// }
+//
+// impl NodeData {
+//     fn set_location(&mut self, _new_location: egui::Pos2) {}
+//     fn show(&mut self, ui: &mut egui::Ui) {
+//       ui.label(&self.caption);
+//     }
+// }
 
-impl NodeData {
+pub trait NodeData: 'static + Downcast + Send + Sync {
     fn set_location(&mut self, _new_location: egui::Pos2) {}
-    fn show(&mut self, ui: &mut egui::Ui) {
-      ui.label(&self.caption);
-    }
+    fn show(&mut self, _ui: &mut egui::Ui) {}
 }
+impl_downcast!(NodeData);
+
+impl NodeData for () {}
 
 pub struct Node {
     pub id: egui::Id,
     pub caption: String,
     pub location: egui::Pos2,
-    data: Box<NodeData>,
+    data: SmallBox<dyn NodeData, space::S32>,
 }
 
 impl Node {
@@ -25,7 +35,14 @@ impl Node {
             id: egui::Id::new(caption),
             caption: caption.to_string(),
             location,
-            data: Box::new(NodeData { caption: caption.to_string() }),
+            data: smallbox!(()),
+        }
+    }
+
+    pub fn with_data<N: NodeData>(self, data: N) -> Self {
+        Self {
+            data: smallbox!(data),
+            ..self
         }
     }
 
@@ -74,11 +91,11 @@ impl Node {
         node_state
     }
 
-    pub fn data(&self) -> &NodeData {
+    pub fn data(&self) -> &dyn NodeData {
         &*self.data
     }
 
-    pub fn data_mut(&mut self) -> &mut NodeData {
+    pub fn data_mut(&mut self) -> &mut dyn NodeData {
         &mut *self.data
     }
 }
