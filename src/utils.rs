@@ -1,8 +1,9 @@
 use eframe::egui;
 use std::path::PathBuf;
 use std::sync::Arc;
+use bytes::bytes::Bytes;
 
-pub fn load_image_from_bytes(bytes: Arc<[u8]>) -> Result<egui::ColorImage, image::ImageError> {
+pub fn load_image_from_bytes(bytes: Arc<Bytes>) -> Result<egui::ColorImage, image::ImageError> {
     let image = image::load_from_memory(&bytes)?;
     let size = [image.width() as _, image.height() as _];
     let image_buffer = image.to_rgba8();

@@ -1,5 +1,6 @@
 use crate::todos::Todo;
 use reqwest::Method;
+use bytes::bytes::Bytes;
 use serde::{Deserialize, Serialize};
 use std::sync::{mpsc::Sender, Arc};
 use thiserror::Error;
@@ -92,7 +93,7 @@ async fn post_todo(todo: Todo) -> Result<Todo, ApiError> {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-pub fn fetch_image(url: &str, sender: Sender<Arc<[u8]>>) {
+pub fn fetch_image(url: &str, sender: Sender<Arc<Bytes>>) {
     dbg!("fetch call");
     tokio::spawn(async move {
         let bytes = reqwest::get(url)
@@ -155,7 +156,7 @@ async fn post_todo_web(todo: Todo) -> Result<Todo, ApiError> {
 }
 
 #[cfg(target_arch = "wasm32")]
-pub fn fetch_image_web(url: &str, sender: Sender<Arc<[u8]>>) {
+pub fn fetch_image_web(url: &str, sender: Sender<Arc<Bytes>>) {
     wasm_bindgen_futures::spawn_local(async move {
         let bytes = reqwest_wasm::get(URL)
             .await
