@@ -45,10 +45,10 @@ impl crate::View for ImageUrlPromptComponent {
                 let mut image_bytes;
               
                 #[cfg(not(target_arch = "wasm32"))]
-                api::fetch_image(url, sender);
+                api::fetch_image(url, *sender);
                 
                 #[cfg(target_arch = "wasm32")]
-                api::fetch_image_web(url, sender);
+                api::fetch_image_web(url, *sender);
             }          
         }
     }

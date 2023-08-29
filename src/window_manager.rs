@@ -37,10 +37,10 @@ impl Windows {
     pub fn get_mut(&mut self, key: &'static str) -> Option<&mut Box<dyn Window>> {
       for window in &mut self.windows {
         if window.name() == key {
-          Some(window)
+          return Some(window);
         }
       }
-      None
+      return None;
     }
 }
 pub fn set_open(open: &mut BTreeSet<String>, key: &'static str, is_open: bool) {

@@ -95,14 +95,14 @@ async fn post_todo(todo: Todo) -> Result<Todo, ApiError> {
 pub fn fetch_image(url: &str, sender: Sender<Arc<[u8]>>) {
     dbg!("fetch call");
     tokio::spawn(async move {
-        let bytes: [u8] = reqwest::get(url)
+        let bytes = reqwest::get(url)
             .await
             .expect("Failed to fetch data from server")
             .bytes()
             .await
             .expect("Failed to parse byte image data");
 
-        let result: Arc<[u8]> = Arc::new(bytes);
+        let result = Arc::new(bytes);
         sender.send(result);
     });
 }
@@ -157,14 +157,14 @@ async fn post_todo_web(todo: Todo) -> Result<Todo, ApiError> {
 #[cfg(target_arch = "wasm32")]
 pub fn fetch_image_web(url: &str, sender: Sender<Arc<[u8]>>) {
     wasm_bindgen_futures::spawn_local(async move {
-        let bytes: [u8] = reqwest_wasm::get(URL)
+        let bytes = reqwest_wasm::get(URL)
             .await
             .expect("Failed to fetch data from server")
             .bytes()
             .await
             .expect("Failed to parse image bytes");
 
-        let result: Arc<[u8]> = Arc::new(bytes);
+        let result = Arc::new(bytes);
         sender.send(result);
     });
 }
