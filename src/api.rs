@@ -164,4 +164,5 @@ pub fn fetch_image_web(url: &str) -> Result<Arc<[u8]>, ApiError> {
 
         let result: Arc<[u8]> = Arc::new(bytes);
         Ok(result)
+    });
 }
