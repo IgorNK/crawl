@@ -1,11 +1,13 @@
 use crate::api::{self, ResponseData};
 use crate::chat_component::ChatComponent;
 // use crate::draggable::Draggable;
+use crate::imageurlprompt_component::ImageUrlPromptComponent;
 use crate::node::{Node, NodeData};
 use crate::todos::{Todo, TodoList};
 use crate::window_manager::{self, Windows};
 use crate::zoom_pan_container::ZoomPanContainer;
 use crate::View;
+use downcast_rs::Downcast;
 use egui_dnd::dnd;
 use std::sync::mpsc::{self, Receiver, Sender};
 
@@ -55,8 +57,17 @@ impl Default for TemplateApp {
         cont.add_node(node_one);
         cont.add_node(node_two);
 
+        let mut windows = Windows::default();
+        if let Some(image_adder) = windows.get_mut("Image URL") {
+            if let Some(image_adder) = image_adder.downcast_mut::<ImageUrlPromptComponent>() {
+                dbg!("setting sender");
+                image_adder.set_sender(cont.tx.clone());
+                dbg!(image_adder);
+            }
+        }
+
         Self {
-            windows: Windows::default(),
+            windows,
             // drag: Draggable::new("0__0"),
             // playgrid: PlayGridComponent::new(egui::Vec2::splat(512f32)),
             zoom_container: cont,

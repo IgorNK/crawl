@@ -6,18 +6,25 @@ use crate::{
     node_image::NodeImageData,
     zoom_pan::ZoomPanState,
 };
+use bytes::Bytes;
 use eframe::egui;
+use std::sync::{mpsc, Arc};
 
 pub struct ZoomPanContainer {
     id: egui::Id,
     nodes: HashMap<egui::Id, Node>,
+    rx: mpsc::Receiver<Arc<Bytes>>,
+    pub tx: mpsc::Sender<Arc<Bytes>>,
 }
 
 impl ZoomPanContainer {
     pub fn new<I: Into<egui::Id>>(id: I) -> Self {
+        let (tx, rx) = mpsc::channel();
         Self {
             id: id.into(),
             nodes: HashMap::new(),
+            rx,
+            tx,
         }
     }
 }
@@ -63,6 +70,7 @@ impl ZoomPanContainer {
         zoom_pan_state.store(ui, self.id);
 
         self.detect_files_being_dropped(ui);
+        self.wait_for_image(ui);
     }
 
     pub fn add_node(&mut self, node: Node) -> egui::Id {
@@ -110,6 +118,20 @@ impl ZoomPanContainer {
                         self.add_node(node);
                     }
                 }
+            }
+        }
+    }
+
+    fn wait_for_image(&mut self, ui: &mut egui::Ui) {
+        if let Ok(bytes) = self.rx.try_recv() {
+            dbg!("try receive");
+            if let Ok(image) = load_image_from_bytes(bytes) {
+                let texture = ui.ctx().load_texture("tex", image, Default::default());
+                let node_data = NodeImageData {
+                    texture: Some(texture),
+                };
+                let node = Node::new("Image node", egui::Pos2::ZERO).with_data(node_data);
+                self.add_node(node);
             }
         }
     }

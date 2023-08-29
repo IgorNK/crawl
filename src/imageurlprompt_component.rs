@@ -1,8 +1,9 @@
+use crate::api;
+use bytes::Bytes;
 use eframe::egui;
 use std::sync::{mpsc, Arc};
-use bytes::bytes::Bytes;
-use crate::api;
 
+#[derive(Debug)]
 pub struct ImageUrlPromptComponent {
     url: String,
     sender: Option<mpsc::Sender<Arc<Bytes>>>,
@@ -14,7 +15,20 @@ impl Default for ImageUrlPromptComponent {
             url: String::new(),
             sender: None,
         }
-    }  
+    }
+}
+
+impl ImageUrlPromptComponent {
+    pub fn with_sender(self, sender: mpsc::Sender<Arc<Bytes>>) -> Self {
+        Self {
+            sender: Some(sender),
+            ..self
+        }
+    }
+
+    pub fn set_sender(&mut self, sender: mpsc::Sender<Arc<Bytes>>) {
+        self.sender = Some(sender);
+    }
 }
 
 impl crate::Window for ImageUrlPromptComponent {
@@ -33,22 +47,20 @@ impl crate::Window for ImageUrlPromptComponent {
 
 impl crate::View for ImageUrlPromptComponent {
     fn ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
-        let Self {
-            ref mut url,
-            sender,
-        } = self;
-      
         ui.label("URL: ");
-        if ui.text_edit_singleline(url).lost_focus()
+        if ui.text_edit_singleline(&mut self.url).lost_focus()
             && ui.input(|i| i.key_pressed(egui::Key::Enter))
         {
-            if let Some(sender) = sender {              
+            dbg!(&self);
+            dbg!(&self.sender);
+            if let Some(ref mut sender) = self.sender {
+                dbg!(&self.url);
                 #[cfg(not(target_arch = "wasm32"))]
-                api::fetch_image(url, *sender);
-                
+                api::fetch_image(self.url.clone(), sender.clone());
+
                 #[cfg(target_arch = "wasm32")]
-                api::fetch_image_web(url, *sender);
-            }          
+                api::fetch_image_web(self.url.clone(), sender.clone());
+            }
         }
     }
 }

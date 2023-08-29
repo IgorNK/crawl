@@ -1,7 +1,7 @@
+use bytes::Bytes;
 use eframe::egui;
 use std::path::PathBuf;
 use std::sync::Arc;
-use bytes::bytes::Bytes;
 
 pub fn load_image_from_bytes(bytes: Arc<Bytes>) -> Result<egui::ColorImage, image::ImageError> {
     let image = image::load_from_memory(&bytes)?;

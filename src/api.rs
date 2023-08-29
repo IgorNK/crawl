@@ -1,6 +1,6 @@
 use crate::todos::Todo;
+use bytes::Bytes;
 use reqwest::Method;
-use bytes::bytes::Bytes;
 use serde::{Deserialize, Serialize};
 use std::sync::{mpsc::Sender, Arc};
 use thiserror::Error;
@@ -93,7 +93,7 @@ async fn post_todo(todo: Todo) -> Result<Todo, ApiError> {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-pub fn fetch_image(url: &str, sender: Sender<Arc<Bytes>>) {
+pub fn fetch_image(url: String, sender: Sender<Arc<Bytes>>) {
     dbg!("fetch call");
     tokio::spawn(async move {
         let bytes = reqwest::get(url)
@@ -104,7 +104,7 @@ pub fn fetch_image(url: &str, sender: Sender<Arc<Bytes>>) {
             .expect("Failed to parse byte image data");
 
         let result = Arc::new(bytes);
-        sender.send(result);
+        let _ = sender.send(result);
     });
 }
 
@@ -156,9 +156,9 @@ async fn post_todo_web(todo: Todo) -> Result<Todo, ApiError> {
 }
 
 #[cfg(target_arch = "wasm32")]
-pub fn fetch_image_web(url: &str, sender: Sender<Arc<Bytes>>) {
+pub fn fetch_image_web(url: String, sender: Sender<Arc<Bytes>>) {
     wasm_bindgen_futures::spawn_local(async move {
-        let bytes = reqwest_wasm::get(URL)
+        let bytes = reqwest_wasm::get(url)
             .await
             .expect("Failed to fetch data from server")
             .bytes()
