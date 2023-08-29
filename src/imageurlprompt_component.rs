@@ -1,6 +1,6 @@
 use eframe::egui;
 use std::sync::{mpsc, Arc};
-use crate::api::{fetch_image, fetch_image_web};
+use crate::api;
 
 pub struct ImageUrlPromptComponent {
     url: String,
@@ -41,19 +41,15 @@ impl crate::View for ImageUrlPromptComponent {
         if ui.text_edit_singleline(url).lost_focus()
             && ui.input(|i| i.key_pressed(egui::Key::Enter))
         {
-          let mut image_bytes;
-          
-          #[cfg(not(target_arch = "wasm32"))]
-          image_bytes = fetch_image(url);
-          
-          #[cfg(target_arch = "wasm32")]
-          image_bytes = fetch_image_web(url);
-
-          if let Ok(image_bytes) = image_bytes {
-            sender.send(image_bytes);
-          }
-
-          sender = None;
+            if let Some(sender) = sender {
+                let mut image_bytes;
+              
+                #[cfg(not(target_arch = "wasm32"))]
+                api::fetch_image(url, sender);
+                
+                #[cfg(target_arch = "wasm32")]
+                api::fetch_image_web(url, sender);
+            }          
         }
     }
 }

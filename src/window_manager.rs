@@ -35,7 +35,7 @@ impl Windows {
     }
 
     pub fn get_mut(&mut self, key: &'static str) -> Option<&mut Box<dyn Window>> {
-      for window in &mut windows {
+      for window in &mut self.windows {
         if window.name() == key {
           Some(window)
         }

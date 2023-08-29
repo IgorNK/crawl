@@ -1,7 +1,7 @@
 use crate::todos::Todo;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
-use std::sync::mpsc::Sender;
+use std::sync::{mpsc::Sender, Arc};
 use thiserror::Error;
 
 const URL: &str = "https://simple-api.metsysfhtagn.repl.co/api/todos";
@@ -92,17 +92,18 @@ async fn post_todo(todo: Todo) -> Result<Todo, ApiError> {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-pub fn fetch_image(url: &str) -> Result<Arc<[u8]>, ApiError> {
+pub fn fetch_image(url: &str, sender: Sender<Arc<[u8]>>) {
     dbg!("fetch call");
     tokio::spawn(async move {
         let bytes: [u8] = reqwest::get(url)
-            .await?
+            .await
+            .expect("Failed to fetch data from server")
             .bytes()
             .await
-            .map_err(ApiError::BadRequest("Unknown error"))?;
+            .expect("Failed to parse byte image data");
 
         let result: Arc<[u8]> = Arc::new(bytes);
-        Ok(result)
+        sender.send(result);
     });
 }
 
@@ -154,15 +155,16 @@ async fn post_todo_web(todo: Todo) -> Result<Todo, ApiError> {
 }
 
 #[cfg(target_arch = "wasm32")]
-pub fn fetch_image_web(url: &str) -> Result<Arc<[u8]>, ApiError> {
+pub fn fetch_image_web(url: &str, sender: Sender<Arc<[u8]>>) {
     wasm_bindgen_futures::spawn_local(async move {
-        let body: String = reqwest_wasm::get(URL)
-            .await?
+        let bytes: [u8] = reqwest_wasm::get(URL)
+            .await
+            .expect("Failed to fetch data from server")
             .bytes()
             .await
-            .map_err(ApiError::WebRequestError)?;
+            .expect("Failed to parse image bytes");
 
         let result: Arc<[u8]> = Arc::new(bytes);
-        Ok(result)
+        sender.send(result);
     });
 }
