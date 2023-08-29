@@ -91,6 +91,21 @@ async fn post_todo(todo: Todo) -> Result<Todo, ApiError> {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
+pub fn fetch_image(url: &str) -> Result<Arc<[u8]>, ApiError> {
+    dbg!("fetch call");
+    tokio::spawn(async move {
+        let bytes: [u8] = reqwest::get(url)
+            .await?
+            .bytes()
+            .await
+            .map_err(ApiError::BadRequest("Unknown error"))?;
+
+        let result: Arc<[u8]> = Arc::new(bytes);
+        Ok(result)
+    });
+}
+
 // WebAssembly
 
 #[cfg(target_arch = "wasm32")]
@@ -136,4 +151,17 @@ async fn post_todo_web(todo: Todo) -> Result<Todo, ApiError> {
         "success" => Ok(response.data.todo),
         _ => Err(ApiError::BadRequest("Unknown error")),
     }
+}
+
+#[cfg(target_arch = "wasm32")]
+pub fn fetch_image_web(url: &str) -> Result<Arc<[u8]>, ApiError> {
+    wasm_bindgen_futures::spawn_local(async move {
+        let body: String = reqwest_wasm::get(URL)
+            .await?
+            .bytes()
+            .await
+            .map_err(ApiError::WebRequestError)?;
+
+        let result: Arc<[u8]> = Arc::new(bytes);
+        Ok(result)
 }

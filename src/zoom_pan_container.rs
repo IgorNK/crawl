@@ -100,6 +100,7 @@ impl ZoomPanContainer {
         if !dropped_files.is_empty() {
             for file in dropped_files {
                 dbg!(&file);
+                log::warn!(&file);
                 if let Some(path) = &file.path {
                     if let Ok(image) = load_image_from_path(path) {
                         let texture = ui.ctx().load_texture("tex", image, Default::default());
@@ -110,10 +111,6 @@ impl ZoomPanContainer {
                         self.add_node(node);
                     }
                 }
-                // if let Some(bytes) = &file.bytes {
-                //     if let Ok(image) = load_image_from_bytes(bytes.clone()) {
-                //     }
-                // }
             }
         }
     }

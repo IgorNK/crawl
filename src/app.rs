@@ -151,6 +151,10 @@ impl eframe::App for TemplateApp {
                 let mut chat_open = windows.open.contains("Chat");
                 ui.toggle_value(&mut chat_open, "Chat");
                 window_manager::set_open(&mut windows.open, "Chat", chat_open);
+
+                let mut add_image_open = windows.open.contains("Image URL");
+                ui.toggle_value(&mut add_image_open, "Image URL");
+                window_manager::set_open(&mut windows.open, "Image URL", add_image_open);
             });
         });
 

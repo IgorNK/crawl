@@ -14,6 +14,7 @@ impl Default for Windows {
         Windows::from_windows(vec![
             Box::<crate::character_gen::CharacterGenComponent>::default(),
             Box::<crate::chat_component::ChatComponent>::default(),
+            Box::<crate::imageurlprompt_component::ImageUrlPromptComponent>::default(),
         ])
     }
 }
@@ -31,6 +32,15 @@ impl Windows {
             window.show(ctx, &mut is_open);
             set_open(open, window.name(), is_open);
         }
+    }
+
+    pub fn get_mut(&mut self, key: &'static str) -> Option<&mut Box<dyn Window>> {
+      for window in &mut windows {
+        if window.name() == key {
+          Some(window)
+        }
+      }
+      None
     }
 }
 pub fn set_open(open: &mut BTreeSet<String>, key: &'static str, is_open: bool) {

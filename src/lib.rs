@@ -23,6 +23,7 @@ mod utils;
 mod window_manager;
 mod zoom_pan;
 mod zoom_pan_container;
+mod imageurlprompt_component;
 pub use app::TemplateApp;
 
 pub trait View {
