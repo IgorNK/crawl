@@ -125,6 +125,7 @@ impl ZoomPanContainer {
     fn wait_for_image(&mut self, ui: &mut egui::Ui) {
         if let Ok(bytes) = self.rx.try_recv() {
             dbg!("try receive");
+            #[cfg(not(target_arch = "wasm32"))]
             if let Ok(image) = load_image_from_bytes(bytes) {
                 let texture = ui.ctx().load_texture("tex", image, Default::default());
                 let node_data = NodeImageData {
