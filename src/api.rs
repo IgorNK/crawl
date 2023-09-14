@@ -8,7 +8,7 @@ use thiserror::Error;
 use reqwest::Method;
 
 #[cfg(target_arch = "wasm32")]
-use wasm_bindgen::prelude::*;
+use eframe::wasm_bindgen::JsCast;
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen_futures::JsFuture;
 #[cfg(target_arch = "wasm32")]
