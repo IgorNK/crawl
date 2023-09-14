@@ -187,7 +187,7 @@ pub fn fetch_image_web(url: String, sender: Sender<Arc<Bytes>>) {
         let mut opts = RequestInit::new();
         opts.method("GET");
         opts.mode(RequestMode::NoCors);
-        let request = Request::new_with_str_and_init(&static_url), &opts).expect("Failed to form request");
+        let request = Request::new_with_str_and_init(&static_url, &opts).expect("Failed to form request");
         request
             .headers()
             .set("Accept", "image/png")
