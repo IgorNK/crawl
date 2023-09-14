@@ -487,6 +487,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "wasm-bindgen-futures",
+ "web-sys",
 ]
 
 [[package]]
