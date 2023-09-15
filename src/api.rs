@@ -179,6 +179,7 @@ pub fn fetch_image_web(url: String, sender: Sender<Arc<Bytes>>) {
             .request(Method::GET, url_parsed)
             .header("Content-Type", "application/json")
             .header(reqwest::header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+            .fetch_mode_no_cors()
             .build()
             .unwrap();
 
