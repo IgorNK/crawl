@@ -3,28 +3,14 @@ use bytes::Bytes;
 use serde::{Deserialize, Serialize};
 use std::sync::{mpsc::Sender, Arc};
 use thiserror::Error;
-
-// #[cfg(not(target_arch = "wasm32"))]
 use reqwest::Method;
-
-#[cfg(target_arch = "wasm32")]
-use eframe::wasm_bindgen::JsCast;
-#[cfg(target_arch = "wasm32")]
-use wasm_bindgen_futures::JsFuture;
-#[cfg(target_arch = "wasm32")]
-use web_sys::{Request, RequestInit, RequestMode, Response};
-// use reqwest_wasm::Method;
 
 const URL: &str = "https://simple-api.metsysfhtagn.repl.co/api/todos";
 
 #[derive(Error, Debug)]
 pub enum ApiError {
-    // #[cfg(not(target_arch = "wasm32"))]
     #[error("Unable to send request")]
     SendRequestError(#[from] reqwest::Error),
-    // #[cfg(target_arch = "wasm32")]
-    // #[error("Unable to send web request")]
-    // WebRequestError(#[from] reqwest::Error),
     #[error("Request failed: {0}")]
     BadRequest(&'static str),
 }
@@ -186,22 +172,27 @@ pub fn fetch_image_web(url: String, sender: Sender<Arc<Bytes>>) {
     // log::warn!("{}", url);
     wasm_bindgen_futures::spawn_local(async move {
         let static_url = "https://images.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png";
-        let mut opts = RequestInit::new();
-        opts.method("GET");
-        opts.mode(RequestMode::NoCors);
-        let request = Request::new_with_str_and_init(&static_url, &opts).expect("Failed to form request");
-        request
-            .headers()
-            .set("Accept", "image/png")
-            .expect("Failed to set request headers");
+        let url_parsed = reqwest::Url::parse(static_url).unwrap();
+        log::warn!("{}", &url_parsed);
+        let client = reqwest::Client::new();
+        let request = client
+            .request(Method::GET, url_parsed)
+            .header("Content-Type", "application/json")
+            .header(reqwest::header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+            .build()
+            .unwrap();
 
-        let window = web_sys::window().unwrap();
-        let resp_value = JsFuture::from(window.fetch_with_request(&request)).await.expect("Failed to send request");
-        let response: Response = resp_value.dyn_into().unwrap();
+        log::warn!("Pre-request");
+
+        let response = client.execute(request).await;
 
         log::warn!("We got a response");
-  
-        let bytes: Bytes = response.dyn_into().unwrap();        
+
+        let bytes = response
+            .unwrap()
+            .bytes()
+            .await
+            .expect("Failed to parse byte image data");
 
         let result = Arc::new(bytes);
         let _ = sender.send(result);
